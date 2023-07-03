@@ -14,8 +14,8 @@
 # how to tune
 disable # path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line for every toml (api, dto, entity, migration, service...)
 set db url in rocket.toml
-# [default.databases.sea_orm]
-# # Mysql
-# # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
-# url = "mysql://root:aftertime01@localhost/rocket_example"
-# let db: DatabaseConnection = Database::connect("protocol://username:password@host/database").await?;
+----
+[default.databases.sea_orm]
+url = "mysql://root:aftertime01@localhost/rocket_example"
+----
+let db: DatabaseConnection = Database::connect("protocol://username:password@host/database").await?;
