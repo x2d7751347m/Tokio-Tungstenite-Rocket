@@ -12,6 +12,7 @@
    ![rapidoc](rapidoc.png)
 
 # how to tune
+
 disable # path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line for every toml (api, dto, entity, migration, service...)
 set db url in rocket.toml
 ----
