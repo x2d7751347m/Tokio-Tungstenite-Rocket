@@ -6,7 +6,8 @@ edition = "2021"
 publish = false
 
 [workspace]
-members = [".", "api", "service", "entity", "migration", "dto"]
+members = [".", "api", "service", "entity", "migration", "dto", "socket"]
 
 [dependencies]
 rocket-example-api = { path = "api" }
+tokio = { version = "1.29.1", features = ["full"] }

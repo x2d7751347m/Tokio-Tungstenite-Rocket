@@ -1,4 +1,4 @@
-use sea_orm_migration::prelude::*;
+use sea_orm_migration::prelude::*;0
 
 #[async_std::main]
 async fn main() {

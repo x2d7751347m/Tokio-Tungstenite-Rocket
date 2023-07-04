@@ -2886,6 +2886,7 @@ name = "sea-orm-rocket-okapi-example"
 version = "0.1.0"
 dependencies = [
  "rocket-example-api",
+ "tokio",
 ]
 
 [[package]]
@@ -3111,6 +3112,13 @@ name = "smallvec"
 version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
+
+[[package]]
+name = "socket"
+version = "0.1.0"
+dependencies = [
+ "tokio",
+]
 
 [[package]]
 name = "socket2"
@@ -3442,6 +3450,7 @@ dependencies = [
  "libc",
  "mio",
  "num_cpus",
+ "parking_lot 0.12.1",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",

@@ -30,7 +30,7 @@ async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     Ok(rocket)
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "multi_thread")]
 async fn start() -> Result<(), rocket::Error> {
     let mut building_rocket = rocket::build()
         .attach(Db::init())
