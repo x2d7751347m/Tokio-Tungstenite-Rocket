@@ -1,6 +1,6 @@
 use dto::dto;
 use rocket::serde::json::Json;
-use rocket_example_service::{Mutation, Query};
+use rocket_example_service::{Mutation, Query, Mail};
 
 use sea_orm_rocket::Connection;
 
@@ -34,10 +34,13 @@ async fn create(
     conn: Connection<'_, Db>,
     post_data: DataResult<'_, post::Model>,
 ) -> R<Option<String>> {
+    
+    //send email for ownership
+    // Mail::send().now_or_never();
     let db = conn.into_inner();
     let form = post_data?.into_inner();
     let cmd = Mutation::create_post(db, form);
-    match cmd.await {
+    return match cmd.await {
         Ok(_) => Ok(Json(Some("Post successfully added.".to_string()))),
         Err(e) => {
             let m = error::Error {
@@ -47,7 +50,7 @@ async fn create(
             };
             Err(m)
         }
-    }
+    };
 }
 
 /// # Update a post

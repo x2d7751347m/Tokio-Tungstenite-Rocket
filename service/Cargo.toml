@@ -7,6 +7,7 @@ edition = "2021"
 
 [dependencies]
 entity = { path = "../entity" }
+lettre = "0.10.4"
 
 [dependencies.sea-orm]
 # path = "../../../" # remove this line in your own project
