@@ -40,7 +40,7 @@ async fn create(
     let db = conn.into_inner();
     let form = post_data?.into_inner();
     let cmd = Mutation::create_post(db, form);
-    return match cmd.await {
+    match cmd.await {
         Ok(_) => Ok(Json(Some("Post successfully added.".to_string()))),
         Err(e) => {
             let m = error::Error {
@@ -50,7 +50,7 @@ async fn create(
             };
             Err(m)
         }
-    };
+    }
 }
 
 /// # Update a post
