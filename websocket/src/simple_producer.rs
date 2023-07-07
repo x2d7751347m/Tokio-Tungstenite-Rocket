@@ -14,7 +14,8 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
         .create()
         .expect("Producer creation error");
         let message_data = &msg.into_data();
-        let id = &vec![4];
+        let id = 4.to_string();
+        let id_string = id.as_str();
 
         let futures = (0..1)
         .map(|i| async move {
@@ -24,7 +25,7 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
                 .send(
                     FutureRecord::to(topic_name)
                         .payload(message_data)
-                        .key(id)
+                        .key(id_string)
                         // .headers(OwnedHeaders::new().insert(Header {
                         //     key: "header_key",
                         //     value: Some("header_value"),
