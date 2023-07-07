@@ -486,7 +486,7 @@ async fn handle_connection(
     let group_id = "group-id";
 
     tokio::spawn(async move {
-        consume_and_print(brokers, group_id, &[topic_name_string.clone().as_str()], tx).await;
+        consume_and_print(brokers, group_id, &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
