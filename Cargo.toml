@@ -6,7 +6,8 @@ edition = "2021"
 publish = false
 
 [workspace]
-members = [".", "api", "service", "entity", "migration", "dto", "socket"]
+members = [".", "api", "service", "entity", "migration", "dto", "socket", "websocket"]
 
 [dependencies]
 rocket-example-api = { path = "api" }
+websocket = { path = "websocket" }
