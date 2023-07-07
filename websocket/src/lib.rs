@@ -476,7 +476,7 @@ async fn handle_connection(
             // send messages from incoming to kafka
 
         let brokers = "localhost:29092";
-        futures::executor::block_on(produce(brokers, topic_name, msg));
+        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), msg.clone()));
 
         future::ok(())
     });

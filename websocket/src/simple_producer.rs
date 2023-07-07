@@ -17,8 +17,8 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
         let id = 4.to_string();
         let id_string = id.as_str();
 
-        let futures = (0..1)
-        .map(|i| async move {
+    let futures = (0..1)
+        .map(|i|  async move {
             // The send operation on the topic returns a future, which will be
             // completed once the result or failure from Kafka is received.
             let delivery_status = producer
@@ -43,7 +43,6 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
 
     // This loop will wait until all delivery statuses have been received.
     for future in futures {
-        // future.await;
         info!("Future completed. Result: {:?}", future.await);
     }
 }

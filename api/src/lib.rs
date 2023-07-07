@@ -1,10 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
-use std::thread;
 
 use rocket::fairing::{self, AdHoc};
-use rocket::response::Redirect;
 use rocket::{Build, Rocket};
 
 use migration::MigratorTrait;
@@ -71,15 +69,15 @@ async fn start() -> Result<(), rocket::Error> {
             "/okapi-example" => okapi_example::get_routes_and_docs(&openapi_settings),
     };
 
-    thread::spawn(|| {
-        websocket::websocket_main();
-    });
+    tokio::task::spawn_blocking(|| {
+        let _ = websocket::websocket_main();
+    }).await.expect("Task panicked");
     building_rocket.launch().await.map(|_| ())
 }
 
 fn cors() -> Cors {
     let allowed_origins =
-        AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000", "ws://127.0.0.1:8080"]);
+        AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000"]);
 
     rocket_cors::CorsOptions {
         allowed_origins,
