@@ -5,15 +5,13 @@ use log::info;
 use rdkafka::config::ClientConfig;
 // use rdkafka::message::{Header, OwnedHeaders};
 use rdkafka::producer::{FutureProducer, FutureRecord};
-use tungstenite::Message;
 
-pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
+pub async fn produce(brokers: &str, topic_name: &str, msg: &Vec<u8>) {
     let producer: &FutureProducer = &ClientConfig::new()
         .set("bootstrap.servers", brokers)
         .set("message.timeout.ms", "5000")
         .create()
         .expect("Producer creation error");
-        let message_data = &msg.into_data();
         let id = 4.to_string();
         let id_string = id.as_str();
 
@@ -24,7 +22,7 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: Message) {
             let delivery_status = producer
                 .send(
                     FutureRecord::to(topic_name)
-                        .payload(message_data)
+                        .payload(msg)
                         .key(id_string)
                         // .headers(OwnedHeaders::new().insert(Header {
                         //     key: "header_key",

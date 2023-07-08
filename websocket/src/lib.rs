@@ -482,7 +482,8 @@ async fn handle_connection(
             // send messages from incoming to kafka
 
         let brokers = "localhost:29092";
-        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), msg.clone()));
+        let message_data = &msg.into_data();
+        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), message_data));
 
         future::ok(())
     });
@@ -519,7 +520,7 @@ async fn handle_request(
     
     let db = Database::connect(opt).await.unwrap();
     let dbref = db.to_owned();
-    let form = Model::from(Model { id: (2), title: ("dfsdf".parse().unwrap()), text: ("sdfdsf".parse().unwrap()) } );
+    let form = Model::from(Model { id: (2), title: ("title".parse().unwrap()), text: ("text".parse().unwrap()) } );
     let cmd = Mutation::create_post(&dbref, form);
     let _ = cmd.await;
     // Closing connection here
@@ -585,7 +586,7 @@ async fn handle_request(
 }
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 10)]
-pub async fn websocket() -> Result<(), hyper::Error> {
+pub async fn main() -> Result<(), hyper::Error> {
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 
     let addr = env::args().nth(1).unwrap_or_else(|| "127.0.0.1:8080".to_string()).parse().unwrap();

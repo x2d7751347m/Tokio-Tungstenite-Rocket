@@ -130,7 +130,7 @@ async fn main() {
 
     let topics = vec!["input-topic"];
     let brokers = "localhost:29092";
-    let group_id = "group-id";
+    let group_id = (rand::random::<u64>() % 5000).to_string();
 
-    consume_and_print(brokers, group_id, &topics).await
+    consume_and_print(brokers, group_id.as_str(), &topics).await
 }
