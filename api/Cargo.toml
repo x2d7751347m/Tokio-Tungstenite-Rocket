@@ -11,17 +11,17 @@ async-trait = { version = "0.1" }
 service = { path = "../service" }
 futures = { version = "0.3" }
 futures-util = { version = "0.3" }
-rocket = { version = "0.5.0-rc.1", features = [
+rocket = { version = "0.5.0-rc.3", features = [
   "json",
 ] }
-rocket_dyn_templates = { version = "0.1.0-rc.1", features = [
+rocket_dyn_templates = { version = "0.1.0-rc.3", features = [
   "tera",
 ] }
-serde_json = { version = "1.0.99" }
+serde_json = { version = "1.0.100" }
 entity = { path = "../entity" }
 migration = { path = "../migration" }
 tokio = "1.29.1"
-serde = "1.0.166"
+serde = "1.0.167"
 dto = { path = "../dto" }
 websocket = { path = "../websocket" }
 

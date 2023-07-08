@@ -9,7 +9,7 @@ name = "entity"
 path = "src/lib.rs"
 
 [dependencies]
-rocket = { version = "0.5.0-rc.1", features = [
+rocket = { version = "0.5.0-rc.3", features = [
   "json",
 ] }
 
