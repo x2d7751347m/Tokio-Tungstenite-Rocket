@@ -12,6 +12,9 @@
     // missing_docs, unused_must_use, 
     unused_mut, unused_imports, unused_import_braces)]
 
+use entity::post::Model;
+use migration::sea_orm::{ConnectOptions, Database};
+use service::Mutation;
 pub use tungstenite;
 
 mod compat;
@@ -23,7 +26,7 @@ mod stream;
 #[cfg(any(feature = "native-tls", feature = "__rustls-tls", feature = "connect"))]
 mod tls;
 
-use std::io::{Read, Write};
+use std::{io::{Read, Write}, time::Duration};
 
 use compat::{cvt, AllowStd, ContextWaker};
 use futures_util::{
@@ -455,6 +458,9 @@ use hyper::{
 
 use crate::{simple_consumer::consume_and_print, simple_producer::produce};
 
+pub use entity::post;
+pub use entity::post::Entity as Post;
+
 async fn handle_connection(
     topic_name: &str,
     _peer_map: PeerMap,
@@ -483,10 +489,9 @@ async fn handle_connection(
     // send messages from kafka to rx using tx
 
     let brokers = "localhost:29092";
-    let group_id = "group-id";
-
+    let group_id = (rand::random::<u64>() % 5000).to_string();
     tokio::spawn(async move {
-        consume_and_print(brokers, group_id, &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, group_id.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
@@ -502,6 +507,24 @@ async fn handle_request(
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
+    let mut opt = ConnectOptions::new("mysql://admin01:aftertime01@localhost:3306/rocket_example".to_owned());
+    opt.max_connections(100)
+        .min_connections(5)
+        .connect_timeout(Duration::from_secs(8))
+        .acquire_timeout(Duration::from_secs(8))
+        .idle_timeout(Duration::from_secs(8))
+        .max_lifetime(Duration::from_secs(8))
+        .sqlx_logging(true)
+        .sqlx_logging_level(log::LevelFilter::Info);
+    
+    let db = Database::connect(opt).await.unwrap();
+    let dbref = db.to_owned();
+    let form = Model::from(Model { id: (2), title: ("dfsdf".parse().unwrap()), text: ("sdfdsf".parse().unwrap()) } );
+    let cmd = Mutation::create_post(&dbref, form);
+    let _ = cmd.await;
+    // Closing connection here
+    db.close().await.unwrap();
+
     println!("Received a new, potentially ws handshake");
     println!("The request's path is: {}", req.uri().path());
     println!("The request's headers are:");
@@ -560,7 +583,6 @@ async fn handle_request(
     res.headers_mut().append("X-Engine", "TOKIO_TUNGSTENITE".parse().unwrap());
     Ok(res)
 }
-
 
 #[tokio::main]
 pub async fn websocket_main() -> Result<(), hyper::Error> {

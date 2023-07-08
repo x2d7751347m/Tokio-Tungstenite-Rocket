@@ -1,6 +1,6 @@
 use dto::dto;
 use rocket::serde::json::Json;
-use rocket_example_service::{Mutation, Query, Mail};
+use service::{Mutation, Query};
 
 use sea_orm_rocket::Connection;
 

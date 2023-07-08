@@ -2,7 +2,7 @@ mod prepare;
 
 use entity::post;
 use prepare::prepare_mock_db;
-use rocket_example_service::{Mutation, Query};
+use service::{Mutation, Query};
 
 #[tokio::test]
 async fn main() {

@@ -52,6 +52,9 @@ futures-util = { version = "0.3.28", default-features = false, features = ["sink
 futures-channel = { version = "0.3.28"}
 tracing = { version = "0.1.30", optional = true }
 hdrhistogram = "7.5.2"
+migration = { path = "../migration" }
+entity = { path = "../entity" }
+service = { path = "../service" }
 
 [dependencies.tungstenite]
 # TODO use 0.20 release

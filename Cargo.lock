@@ -2804,25 +2804,15 @@ dependencies = [
  "futures-util",
  "migration",
  "rocket",
- "rocket-example-service",
  "rocket_cors",
  "rocket_dyn_templates",
  "rocket_okapi",
  "sea-orm-rocket",
  "serde",
  "serde_json",
+ "service",
  "tokio",
  "websocket",
-]
-
-[[package]]
-name = "rocket-example-service"
-version = "0.1.0"
-dependencies = [
- "entity",
- "lettre",
- "sea-orm",
- "tokio",
 ]
 
 [[package]]
@@ -3397,6 +3387,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "96426c9936fd7a0124915f9185ea1d20aa9445cc9821142f0a73bc9207a2e186"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "service"
+version = "0.1.0"
+dependencies = [
+ "entity",
+ "lettre",
+ "sea-orm",
+ "tokio",
 ]
 
 [[package]]
@@ -4380,6 +4380,7 @@ version = "0.19.0"
 dependencies = [
  "chrono",
  "clap 2.34.0",
+ "entity",
  "env_logger",
  "futures",
  "futures-channel",
@@ -4388,11 +4389,13 @@ dependencies = [
  "hdrhistogram",
  "hyper",
  "log",
+ "migration",
  "native-tls",
  "rand",
  "rdkafka",
  "rustls",
  "rustls-native-certs",
+ "service",
  "tokio",
  "tokio-native-tls",
  "tokio-rustls",

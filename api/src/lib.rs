@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate rocket;
 
-
 use rocket::fairing::{self, AdHoc};
 use rocket::{Build, Rocket};
 
@@ -68,10 +67,6 @@ async fn start() -> Result<(), rocket::Error> {
             "/additional" => custom_route_spec,
             "/okapi-example" => okapi_example::get_routes_and_docs(&openapi_settings),
     };
-
-    tokio::task::spawn_blocking(|| {
-        let _ = websocket::websocket_main();
-    }).await.expect("Task panicked");
     building_rocket.launch().await.map(|_| ())
 }
 
