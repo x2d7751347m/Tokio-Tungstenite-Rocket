@@ -39,7 +39,7 @@ naive-runtime = ["futures-executor"]
 env_logger = "0.10.0"
 log = "0.4.19"
 tokio = { version = "1.29.1", default-features = true, features = ["full"] }
-# openssl = { version = "0.10", default-features = false, features = ["vendored"]}
+tokio-metrics = { version = "0.2.2", default-features = false }
 hyper = { version = "0.14.27", default-features = false, features = ["http1", "server", "tcp"] }
 rdkafka = { version = "0.33", features = ["cmake-build"] }
 # clap = "4.3.11"

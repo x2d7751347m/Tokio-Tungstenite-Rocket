@@ -38,7 +38,7 @@ use std::{
     pin::Pin,
     task::{Context, Poll},
 };
-use tokio::io::{AsyncRead, AsyncWrite};
+use tokio::{io::{AsyncRead, AsyncWrite}};
 
 #[cfg(feature = "handshake")]
 use tungstenite::{
@@ -584,8 +584,8 @@ async fn handle_request(
     Ok(res)
 }
 
-#[tokio::main]
-pub async fn websocket_main() -> Result<(), hyper::Error> {
+#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
+pub async fn websocket() -> Result<(), hyper::Error> {
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 
     let addr = env::args().nth(1).unwrap_or_else(|| "127.0.0.1:8080".to_string()).parse().unwrap();
