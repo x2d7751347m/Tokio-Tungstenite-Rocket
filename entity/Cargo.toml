@@ -16,6 +16,7 @@ serde = "1.0.167"
 time = { version = "0.3", features = ["serde"] }
 chrono = "0.4.26"
 schemars = { version = "0.8", features = ["chrono"] }
+validator = { version = "0.16.1", features = ["derive"] }
 
 [dependencies.sea-orm]
 # path = "../../../" # remove this line in your own project

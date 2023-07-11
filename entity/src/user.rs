@@ -3,14 +3,16 @@
 use sea_orm::entity::prelude::*;
 use rocket::serde::{Deserialize, Serialize};
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
+use validator::{Validate, ValidationError};
 
-#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Deserialize, Serialize, JsonSchema)]
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Deserialize, Serialize, JsonSchema, Validate)]
 #[serde(crate = "rocket::serde")]
 #[sea_orm(table_name = "user")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     #[sea_orm(unique)]
+    #[validate(email)]
     pub email: String,
     pub password: String,
     pub firstname: Option<String>,
