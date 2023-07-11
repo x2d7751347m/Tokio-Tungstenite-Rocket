@@ -508,7 +508,7 @@ async fn handle_request(
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
-    let mut opt = ConnectOptions::new("mysql://admin01:aftertime01@localhost:3306/rocket_example".to_owned());
+    let mut opt = ConnectOptions::new("mysql://root:aftertime01@localhost:3306/rocket_example".to_owned());
     opt.max_connections(100)
         .min_connections(5)
         .connect_timeout(Duration::from_secs(8))
