@@ -120,41 +120,6 @@ pub async fn sign_up(
     }
 }
 
-#[post("/sign-up", data = "<req_sign_up>")]
-pub async fn sign_up1(
-    db: &State<DatabaseConnection>,
-    req_sign_up: Json<ReqSignUp>,
-) -> Response<String> {
-    let db = db as &DatabaseConnection;
-
-    if User::find()
-        .filter(user::Column::Email.eq(&req_sign_up.email))
-        .one(db)
-        .await?
-        .is_some()
-    {
-        return Err(ErrorResponse((
-            Status::UnprocessableEntity,
-            "An account exists with that email address.".to_string(),
-        )));
-    }
-
-    User::insert(user::ActiveModel {
-        email: Set(req_sign_up.email.to_owned()),
-        password: Set(hash(&req_sign_up.password, DEFAULT_COST).unwrap()),
-        firstname: Set(req_sign_up.firstname.to_owned()),
-        lastname: Set(req_sign_up.lastname.to_owned()),
-        ..Default::default()
-    })
-    .exec(db)
-    .await?;
-
-    Ok(SuccessResponse((
-        Status::Created,
-        "Account created!".to_string(),
-    )))
-}
-
 #[derive(Serialize, Deserialize)]
 #[serde(crate = "rocket::serde")]
 pub struct ResMe {

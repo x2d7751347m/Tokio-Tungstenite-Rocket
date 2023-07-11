@@ -10,11 +10,13 @@
 
 #![deny(
     // missing_docs, unused_must_use, 
-    unused_mut, unused_imports, unused_import_braces)]
+    unused_mut, 
+    // unused_imports, 
+    unused_import_braces)]
 
-use entity::post::Model;
+use entity::{post::Model, user};
 use migration::sea_orm::{ConnectOptions, Database};
-use service::Mutation;
+use service::{Mutation, Query};
 pub use tungstenite;
 
 mod compat;
@@ -460,13 +462,22 @@ use crate::{simple_consumer::consume_and_print, simple_producer::produce};
 
 pub use entity::post;
 pub use entity::post::Entity as Post;
+use dto::dto::*;
+use bcrypt::{hash, verify, DEFAULT_COST};
 
 async fn handle_connection(
+    db: &migration::sea_orm::DatabaseConnection,
     topic_name: &str,
     _peer_map: PeerMap,
     ws_stream: WebSocketStream<Upgraded>,
     addr: SocketAddr,
 ) {
+    let group_id = (rand::random::<u64>() % 5000).to_string();
+    let cmd = Mutation::create_user(db, ReqSignUp { email: (group_id.clone()), password: (hash("&form_data.password".to_string(), DEFAULT_COST).unwrap()), firstname: (Some("firstname".to_string())), lastname: (Some("lastname".to_string())) });
+    let _ = cmd.await;
+    let user: Option<user::Model> = Query::find_user_by_email(db, group_id)
+    .await
+    .expect("could not find user");
     let topic_name_string = topic_name.to_owned();
     println!("WebSocket connection established: {}", addr);
 
@@ -488,11 +499,10 @@ async fn handle_connection(
         future::ok(())
     });
     // send messages from kafka to rx using tx
-
+    let user_clone = user.clone().unwrap();
     let brokers = "localhost:29092";
-    let group_id = (rand::random::<u64>() % 5000).to_string();
     tokio::spawn(async move {
-        consume_and_print(brokers, group_id.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, user_clone.email.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
@@ -518,13 +528,13 @@ async fn handle_request(
         .sqlx_logging(true)
         .sqlx_logging_level(log::LevelFilter::Info);
     
-    let db = Database::connect(opt).await.unwrap();
-    let dbref = db.to_owned();
+    let db: migration::sea_orm::DatabaseConnection = Database::connect(opt).await.unwrap();
+    let dbref = db.clone().to_owned();
     let form = Model::from(Model { id: (2), title: ("title".parse().unwrap()), text: ("text".parse().unwrap()) } );
     let cmd = Mutation::create_post(&dbref, form);
     let _ = cmd.await;
     // Closing connection here
-    db.close().await.unwrap();
+    // dbref.close().await.unwrap();
 
     println!("Received a new, potentially ws handshake");
     println!("The request's path is: {}", req.uri().path());
@@ -564,6 +574,7 @@ async fn handle_request(
         match hyper::upgrade::on(&mut req).await {
             Ok(upgraded) => {
                 handle_connection(
+                    &db,
                     uri.query().unwrap().to_owned().as_str(),
                     peer_map,
                     WebSocketStream::from_raw_socket(upgraded, Role::Server, None).await,

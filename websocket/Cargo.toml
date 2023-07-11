@@ -55,6 +55,8 @@ hdrhistogram = "7.5.2"
 migration = { path = "../migration" }
 entity = { path = "../entity" }
 service = { path = "../service" }
+dto = { path = "../dto" }
+bcrypt = "0.15"
 
 [dependencies.tungstenite]
 # TODO use 0.20 release
