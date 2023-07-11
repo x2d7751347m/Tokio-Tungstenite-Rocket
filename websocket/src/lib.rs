@@ -499,10 +499,9 @@ async fn handle_connection(
         future::ok(())
     });
     // send messages from kafka to rx using tx
-    let user_clone = user.clone().unwrap();
     let brokers = "localhost:29092";
     tokio::spawn(async move {
-        consume_and_print(brokers, user_clone.email.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, user.clone().email.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
@@ -596,7 +595,7 @@ async fn handle_request(
     Ok(res)
 }
 
-#[tokio::main(flavor = "multi_thread", worker_threads = 10)]
+#[tokio::main]
 pub async fn main() -> Result<(), hyper::Error> {
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 
