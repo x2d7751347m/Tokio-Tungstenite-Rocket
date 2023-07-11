@@ -1,4 +1,6 @@
-use ::entity::{post, post::Entity as Post};
+use dto::dto::ReqSignUp;
+use ::entity::{post, post::Entity as Post, user, user::Entity as User};
+use bcrypt::{hash, verify, DEFAULT_COST};
 use sea_orm::*;
 
 pub struct Mutation;
@@ -49,5 +51,20 @@ impl Mutation {
 
     pub async fn delete_all_posts(db: &DbConn) -> Result<DeleteResult, DbErr> {
         Post::delete_many().exec(db).await
+    }
+
+    pub async fn create_user(
+        db: &DbConn,
+        form_data: ReqSignUp,
+    ) -> Result<user::ActiveModel, DbErr> {
+        user::ActiveModel {
+        email: Set(form_data.email.to_owned()),
+        password: Set(hash(&form_data.password, DEFAULT_COST).unwrap()),
+        firstname: Set(form_data.firstname.to_owned()),
+        lastname: Set(form_data.lastname.to_owned()),
+            ..Default::default()
+        }
+        .save(db)
+        .await
     }
 }

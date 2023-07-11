@@ -1,6 +1,6 @@
 use std::time::SystemTime;
 
-use dto::dto;
+use ::dto::dto::*;
 use rocket::serde::json::Json;
 use service::{Mutation, Query};
 
@@ -51,21 +51,8 @@ use service::{Claims, AuthenticatedUser, AppConfig};
 
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 
-#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
-#[serde(crate = "rocket::serde")]
-pub struct ReqSignIn {
-    pub email: String,
-    pub password: String,
-}
-
-#[derive(Serialize, Deserialize, JsonSchema)]
-#[serde(crate = "rocket::serde")]
-pub struct ResSignIn {
-    pub token: String,
-}
-
 #[openapi(tag = "USER")]
-#[post("/user", data = "<req_sign_in>")]
+#[post("/sign-in", data = "<req_sign_in>")]
 pub async fn sign_in(
     conn: Connection<'_, Db>,
     req_sign_in: DataResult<'_, ReqSignIn>,
@@ -107,17 +94,34 @@ pub async fn sign_in(
     Ok(Json(ResSignIn { token: token }))
 }
 
-#[derive(Deserialize)]
-#[serde(crate = "rocket::serde")]
-pub struct ReqSignUp {
-    email: String,
-    password: String,
-    firstname: Option<String>,
-    lastname: Option<String>,
+
+#[openapi(tag = "USER")]
+#[post("/user", data = "<req_sign_up>")]
+pub async fn sign_up(
+    conn: Connection<'_, Db>,
+    req_sign_up: DataResult<'_, ReqSignUp>,
+) -> R<Option<String>> {
+    
+    //send email for ownership
+    // Mail::send().now_or_never();
+    let db = conn.into_inner();
+    let form = req_sign_up?.into_inner();
+    let cmd = Mutation::create_user(db, form);
+    match cmd.await {
+        Ok(_) => Ok(Json(Some("User successfully added.".to_string()))),
+        Err(e) => {
+            let m = error::Error {
+                err: "Could not insert user".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 400,
+            };
+            Err(m)
+        }
+    }
 }
 
 #[post("/sign-up", data = "<req_sign_up>")]
-pub async fn sign_up(
+pub async fn sign_up1(
     db: &State<DatabaseConnection>,
     req_sign_up: Json<ReqSignUp>,
 ) -> Response<String> {

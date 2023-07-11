@@ -1,5 +1,5 @@
 use entity::*;
-use rocket::serde::{Deserialize, Serialize};
+use rocket::{serde::{Deserialize, Serialize}, form::FromForm};
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
@@ -19,4 +19,26 @@ pub struct UserPost {
     pub password: String,
     pub firstname: Option<String>,
     pub lastname: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
+#[serde(crate = "rocket::serde")]
+pub struct ReqSignUp {
+    pub email: String,
+    pub password: String,
+    pub firstname: Option<String>,
+    pub lastname: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
+#[serde(crate = "rocket::serde")]
+pub struct ReqSignIn {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct ResSignIn {
+    pub token: String,
 }
