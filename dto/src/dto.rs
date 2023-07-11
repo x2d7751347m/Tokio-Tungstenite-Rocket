@@ -10,3 +10,13 @@ pub struct PostsDto {
     pub num_pages: u64,
     pub posts: Vec<post::Model>,
 }
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct UserPost {
+    pub id: i32,
+    pub email: String,
+    pub password: String,
+    pub firstname: Option<String>,
+    pub lastname: Option<String>,
+}

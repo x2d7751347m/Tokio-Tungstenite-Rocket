@@ -19,8 +19,10 @@ use rocket_okapi::{openapi, openapi_get_routes_spec};
 
 const DEFAULT_POSTS_PER_PAGE: u64 = 5;
 
+use crate::auth;
+use auth::*;
 pub fn get_routes_and_docs(settings: &OpenApiSettings) -> (Vec<rocket::Route>, OpenApi) {
-    openapi_get_routes_spec![settings: create, update, list, get_by_id, delete, destroy]
+    openapi_get_routes_spec![settings: create, update, list, get_by_id, delete, destroy, sign_in]
 }
 
 pub type R<T> = std::result::Result<rocket::serde::json::Json<T>, error::Error>;

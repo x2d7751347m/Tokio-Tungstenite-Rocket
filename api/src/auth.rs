@@ -1,3 +1,31 @@
+use std::time::SystemTime;
+
+use dto::dto;
+use rocket::serde::json::Json;
+use service::{Mutation, Query};
+
+use sea_orm_rocket::Connection;
+
+use rocket_okapi::okapi::openapi3::OpenApi;
+
+use crate::error;
+use crate::pool;
+use pool::Db;
+
+pub use entity::post;
+pub use entity::post::Entity as Post;
+
+use rocket_okapi::settings::OpenApiSettings;
+
+use rocket_okapi::{openapi, openapi_get_routes_spec};
+
+const DEFAULT_POSTS_PER_PAGE: u64 = 5;
+
+pub type R<T> = std::result::Result<rocket::serde::json::Json<T>, error::Error>;
+pub type DataResult<'a, T> =
+    std::result::Result<rocket::serde::json::Json<T>, rocket::serde::json::Error<'a>>;
+
+
 /**
  * 📕 BookStore
  *
@@ -5,66 +33,62 @@
  * @link   https://afaan.dev
  * @link   https://github.com/AfaanBilal/bookstore
  */
+use crate::{ErrorResponse};
 use super::{Response, SuccessResponse};
-use crate::auth::{AuthenticatedUser, Claims};
-use crate::controllers::ErrorResponse;
-use crate::entities::{prelude::*, user};
-use crate::AppConfig;
 use bcrypt::{hash, verify, DEFAULT_COST};
+extern crate entity;
+pub use entity::user;
+pub use entity::user::Entity as User;
 use jsonwebtoken::{encode, EncodingKey, Header};
+use migration::sea_orm::{DatabaseConnection, self};
 use rocket::{
     http::Status,
-    serde::{json::Json, Deserialize, Serialize},
+    serde::{Deserialize, Serialize},
     State,
 };
 use sea_orm::*;
-use std::time::SystemTime;
+use service::{Claims, AuthenticatedUser, AppConfig};
 
-#[derive(Deserialize)]
+use rocket_okapi::okapi::schemars::{self, JsonSchema};
+
+#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
 #[serde(crate = "rocket::serde")]
 pub struct ReqSignIn {
-    email: String,
-    password: String,
+    pub email: String,
+    pub password: String,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
 pub struct ResSignIn {
-    token: String,
+    pub token: String,
 }
 
-#[post("/sign-in", data = "<req_sign_in>")]
+#[openapi(tag = "USER")]
+#[post("/user", data = "<req_sign_in>")]
 pub async fn sign_in(
-    db: &State<DatabaseConnection>,
-    config: &State<AppConfig>,
-    req_sign_in: Json<ReqSignIn>,
-) -> Response<Json<ResSignIn>> {
-    let db = db as &DatabaseConnection;
-    let config = config as &AppConfig;
+    conn: Connection<'_, Db>,
+    req_sign_in: DataResult<'_, ReqSignIn>,
+) -> R<ResSignIn> {
+    let db = conn.into_inner();
 
-    let u: user::Model = match User::find()
-        .filter(user::Column::Email.eq(&req_sign_in.email))
-        .one(db)
-        .await?
-    {
-        Some(u) => u,
-        None => {
-            return Err(ErrorResponse((
-                Status::Unauthorized,
-                "Invalid credentials".to_string(),
-            )))
-        }
-    };
+    let form = req_sign_in?.into_inner();
+    
+    let user: Option<user::Model> = Query::find_user_by_email(db, form.email)
+        .await
+        .expect("could not find user");
 
-    if !verify(&req_sign_in.password, &u.password).unwrap() {
-        return Err(ErrorResponse((
-            Status::Unauthorized,
-            "Invalid credentials".to_string(),
-        )));
+    if !verify(&form.password, &user.clone().unwrap().password).unwrap() {
+        let m = error::Error {
+            err: "Invalid password".to_string(),
+            msg: Some("Invalid password".to_string()),
+            http_status_code: 400,
+        };
+        return Err(m);
     }
 
     let claims = Claims {
-        sub: u.id,
+        sub: user.unwrap().id,
         role: "user".to_string(),
         exp: SystemTime::now()
             .duration_since(SystemTime::UNIX_EPOCH)
@@ -76,11 +100,11 @@ pub async fn sign_in(
     let token = encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret(config.jwt_secret.as_bytes()),
+        &EncodingKey::from_secret("config.jwt_secret.as_bytes()".as_bytes()),
     )
     .unwrap();
 
-    Ok(SuccessResponse((Status::Ok, Json(ResSignIn { token }))))
+    Ok(Json(ResSignIn { token: token }))
 }
 
 #[derive(Deserialize)]

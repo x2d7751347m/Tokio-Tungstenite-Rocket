@@ -4,7 +4,7 @@ extern crate rocket;
 use rocket::fairing::{self, AdHoc};
 use rocket::{Build, Rocket};
 
-use migration::MigratorTrait;
+use migration::{MigratorTrait, DbErr};
 use sea_orm_rocket::Database;
 
 use rocket_okapi::mount_endpoints_and_merged_docs;
@@ -23,6 +23,12 @@ mod okapi_example;
 
 pub use entity::post;
 pub use entity::post::Entity as Post;
+
+use rocket::http::Status;
+
+pub mod auth;
+pub mod authors;
+pub mod books;
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &Db::fetch(&rocket).unwrap().conn;
@@ -136,11 +142,6 @@ pub fn main() {
     }
 }
 
-use rocket::http::Status;
-
-pub mod auth;
-pub mod authors;
-pub mod books;
 
 #[derive(Responder)]
 pub struct SuccessResponse<T>(pub (Status, T));

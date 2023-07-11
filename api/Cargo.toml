@@ -24,6 +24,8 @@ tokio = "1.29.1"
 serde = "1.0.167"
 dto = { path = "../dto" }
 websocket = { path = "../websocket" }
+jsonwebtoken = "8.3.0"
+bcrypt = "0.15"
 
 [dependencies.sea-orm-rocket]
 # path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line
@@ -31,7 +33,7 @@ features = ["rocket_okapi"] # enables rocket_okapi so to have open api features 
 # version = "0.5.1"
 
 [dependencies.rocket_okapi]
-version = "0.8.0-rc.2"
+version = "0.8.0-rc.3"
 features = ["swagger", "rapidoc","rocket_db_pools"]
 
 [dependencies.rocket_cors]
