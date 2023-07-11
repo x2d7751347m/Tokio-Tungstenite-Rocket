@@ -472,7 +472,7 @@ async fn handle_connection(
     ws_stream: WebSocketStream<Upgraded>,
     addr: SocketAddr,
 ) {
-    let group_id = (rand::random::<u64>() % 5000).to_string();
+    let group_id = (rand::random::<u64>()).to_string();
     let cmd = Mutation::create_user(db, ReqSignUp { email: (group_id.clone()), password: (hash("&form_data.password".to_string(), DEFAULT_COST).unwrap()), firstname: (Some("firstname".to_string())), lastname: (Some("lastname".to_string())) });
     let _ = cmd.await;
     let user: Option<user::Model> = Query::find_user_by_email(db, group_id)
