@@ -501,7 +501,7 @@ async fn handle_connection(
     // send messages from kafka to rx using tx
     let brokers = "localhost:29092";
     tokio::spawn(async move {
-        consume_and_print(brokers, user.clone().email.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, user.clone().unwrap().email.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
