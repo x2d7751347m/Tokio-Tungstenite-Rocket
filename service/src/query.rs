@@ -25,6 +25,22 @@ impl Query {
         .await
     }
 
+    /// If ok, returns (user models, num pages).
+    pub async fn find_users_in_page(
+        db: &DbConn,
+        page: u64,
+        users_per_page: u64,
+    ) -> Result<(Vec<user::Model>, u64), DbErr> {
+        // Setup paginator
+        let paginator = User::find()
+            .order_by_asc(user::Column::Id)
+            .paginate(db, users_per_page);
+        let num_pages = paginator.num_pages().await?;
+
+        // Fetch paginated users
+        paginator.fetch_page(page - 1).await.map(|p| (p, num_pages))
+    }
+
     /// If ok, returns (post models, num pages).
     pub async fn find_posts_in_page(
         db: &DbConn,

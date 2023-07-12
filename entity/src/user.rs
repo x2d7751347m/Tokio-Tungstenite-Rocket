@@ -11,6 +11,7 @@ use validator::{Validate, ValidationError};
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
+    pub username: String,
     pub password: String,
     pub nickname: String,
     pub created_at: DateTimeUtc,

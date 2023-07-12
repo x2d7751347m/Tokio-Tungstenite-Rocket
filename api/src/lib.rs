@@ -27,6 +27,7 @@ pub use entity::post::Entity as Post;
 use rocket::http::Status;
 
 pub mod auth;
+pub mod user;
 pub mod authors;
 pub mod emails;
 
@@ -71,7 +72,7 @@ async fn start() -> Result<(), rocket::Error> {
     mount_endpoints_and_merged_docs! {
         building_rocket, "/v1".to_owned(), openapi_settings,
             "/additional" => custom_route_spec,
-            "/okapi-example" => okapi_pararium::get_routes_and_docs(&openapi_settings),
+            "/api/v1" => okapi_pararium::get_routes_and_docs(&openapi_settings),
     };
     building_rocket.launch().await.map(|_| ())
 }

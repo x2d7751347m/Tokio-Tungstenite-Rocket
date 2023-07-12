@@ -1,7 +1,9 @@
-use dto::dto::ReqSignUp;
+use std::time::SystemTime;
+
+use dto::dto::{ReqSignUp, UserPatch};
 use ::entity::{post, post::Entity as Post, user, user::Entity as User};
 use bcrypt::{hash, verify, DEFAULT_COST};
-use sea_orm::*;
+use sea_orm::{*, prelude::DateTimeUtc};
 
 pub struct Mutation;
 
@@ -58,11 +60,52 @@ impl Mutation {
         form_data: ReqSignUp,
     ) -> Result<user::ActiveModel, DbErr> {
         user::ActiveModel {
+        username: Set(form_data.nickname.to_owned()),
         password: Set(hash(&form_data.password, DEFAULT_COST).unwrap()),
         nickname: Set(form_data.nickname.to_owned()),
             ..Default::default()
         }
         .save(db)
         .await
+    }
+    
+    pub async fn update_user_by_id(
+        db: &DbConn,
+        id: i32,
+        form_data: UserPatch,
+    ) -> Result<user::Model, DbErr> {
+        let mut user: user::ActiveModel = User::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(DbErr::Custom("Cannot find user.".to_owned()))
+            .map(Into::into)?;
+
+        match form_data.nickname {
+            Some(b) => 
+            {
+                user.nickname = Set(b.to_owned());
+                user.username = Set(b.to_owned())
+            },
+            None => {},
+        };
+        user.password = match form_data.password {
+            Some(b) => Set(hash(&b, DEFAULT_COST).unwrap()),
+            None => NotSet,
+        };
+        user.update(db).await
+    }
+
+    pub async fn delete_user(db: &DbConn, id: i32) -> Result<DeleteResult, DbErr> {
+        let user: user::ActiveModel = User::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(DbErr::Custom("Cannot find user.".to_owned()))
+            .map(Into::into)?;
+
+        user.delete(db).await
+    }
+
+    pub async fn delete_all_users(db: &DbConn) -> Result<DeleteResult, DbErr> {
+        User::delete_many().exec(db).await
     }
 }
