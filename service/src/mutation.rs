@@ -58,10 +58,8 @@ impl Mutation {
         form_data: ReqSignUp,
     ) -> Result<user::ActiveModel, DbErr> {
         user::ActiveModel {
-        email: Set(form_data.email.to_owned()),
         password: Set(hash(&form_data.password, DEFAULT_COST).unwrap()),
-        firstname: Set(form_data.firstname.to_owned()),
-        lastname: Set(form_data.lastname.to_owned()),
+        nickname: Set(form_data.nickname.to_owned()),
             ..Default::default()
         }
         .save(db)

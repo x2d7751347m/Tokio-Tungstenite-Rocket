@@ -18,10 +18,8 @@ impl MigrationTrait for Migration {
                             .auto_increment()
                             .primary_key(),
                     )
-                    .col(ColumnDef::new(User::Email).string().not_null())
                     .col(ColumnDef::new(User::Password).string().not_null())
-                    .col(ColumnDef::new(User::Firstname).string().not_null())
-                    .col(ColumnDef::new(User::Lastname).string().not_null())
+                    .col(ColumnDef::new(User::Nickname).string().not_null())
                     .col(ColumnDef::new(User::CreatedAt).timestamp().extra("DEFAULT CURRENT_TIMESTAMP".to_owned()).not_null())
                     .col(ColumnDef::new(User::UpdatedAt).timestamp().extra("DEFAULT CURRENT_TIMESTAMP".to_owned()).not_null())
                     .to_owned(),
@@ -40,10 +38,8 @@ impl MigrationTrait for Migration {
 enum User {
     Table,
     Id,
-    Email,
     Password,
-    Firstname,
-    Lastname,
+    Nickname,
     CreatedAt,
     UpdatedAt,
 }

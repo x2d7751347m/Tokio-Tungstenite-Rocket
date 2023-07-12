@@ -2,6 +2,7 @@ use std::time::SystemTime;
 
 use ::dto::dto::*;
 use rocket::serde::json::Json;
+use service::HttpAuth;
 use service::{Mutation, Query};
 
 use sea_orm_rocket::Connection;
@@ -120,28 +121,23 @@ pub async fn sign_up(
     }
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
 pub struct ResMe {
     id: i32,
-    email: String,
-    firstname: Option<String>,
-    lastname: Option<String>,
+    nickname: String,
 }
 
+
+#[openapi(tag = "USER")]
 #[get("/me")]
-pub async fn me(db: &State<DatabaseConnection>, user: AuthenticatedUser) -> Response<Json<ResMe>> {
-    let db = db as &DatabaseConnection;
+pub async fn me(conn: Connection<'_, Db>, token: HttpAuth) -> R<ResMe> {
+    let db = conn.into_inner();
 
-    let u: user::Model = User::find_by_id(user.id).one(db).await?.unwrap();
+    let u: user::Model = User::find_by_id(token.id).one(db).await.unwrap().unwrap();
 
-    Ok(SuccessResponse((
-        Status::Ok,
-        Json(ResMe {
-            id: u.id,
-            email: u.email,
-            firstname: u.firstname,
-            lastname: u.lastname,
-        }),
-    )))
+    Ok(Json(ResMe {
+        id: u.id,
+        nickname: u.nickname,
+    }))
 }

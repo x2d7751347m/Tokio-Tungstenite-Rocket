@@ -9,5 +9,6 @@ publish = false
 members = [".", "api", "service", "entity", "migration", "dto", "socket", "websocket"]
 
 [dependencies]
-rocket-example-api = { path = "api" }
+dotenv = "0.15.0"
+rocket-pararium-api = { path = "api" }
 websocket = { path = "websocket" }

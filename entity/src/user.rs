@@ -11,12 +11,8 @@ use validator::{Validate, ValidationError};
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    #[sea_orm(unique)]
-    #[validate(email)]
-    pub email: String,
     pub password: String,
-    pub firstname: Option<String>,
-    pub lastname: Option<String>,
+    pub nickname: String,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
@@ -25,8 +21,8 @@ pub struct Model {
 pub enum Relation {
     // #[sea_orm(has_many = "super::author::Entity")]
     // Author,
-    // #[sea_orm(has_many = "super::book::Entity")]
-    // Book,
+    #[sea_orm(has_many = "super::email::Entity")]
+    Email,
 }
 
 // impl Related<super::author::Entity> for Entity {
@@ -35,10 +31,10 @@ pub enum Relation {
 //     }
 // }
 
-// impl Related<super::book::Entity> for Entity {
-//     fn to() -> RelationDef {
-//         Relation::Book.def()
-//     }
-// }
+impl Related<super::email::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Email.def()
+    }
+}
 
 impl ActiveModelBehavior for ActiveModel {}

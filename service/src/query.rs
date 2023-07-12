@@ -1,6 +1,8 @@
 use ::entity::{post, post::Entity as Post};
 use ::entity::{user, user::Entity as User};
+use ::entity::{email, email::Entity as Email};
 use sea_orm::*;
+use sea_orm::sea_query::Expr;
 
 pub struct Query;
 
@@ -13,9 +15,14 @@ impl Query {
     }
     
     pub async fn find_user_by_email(db: &DbConn, email: String) -> Result<Option<user::Model>, DbErr> {
-        User::find()
-        .filter(user::Column::Email.eq(email))
-        .one(db).await
+        user::Entity::find()
+        .join_rev(JoinType::InnerJoin, user::Relation::Email.def())
+        .filter(
+            Condition::all()
+                .add(email::Column::Email.eq(email))
+        )
+        .one(db)
+        .await
     }
 
     /// If ok, returns (post models, num pages).

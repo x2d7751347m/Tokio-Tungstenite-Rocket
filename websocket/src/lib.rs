@@ -473,7 +473,7 @@ async fn handle_connection(
     addr: SocketAddr,
 ) {
     let group_id = (rand::random::<u64>()).to_string();
-    let cmd = Mutation::create_user(db, ReqSignUp { email: (group_id.clone()), password: (hash("&form_data.password".to_string(), DEFAULT_COST).unwrap()), firstname: (Some("firstname".to_string())), lastname: (Some("lastname".to_string())) });
+    let cmd = Mutation::create_user(db, ReqSignUp { nickname: (group_id.clone()), password: (hash("password".to_string(), DEFAULT_COST).unwrap()), email: "email".to_string() });
     let _ = cmd.await;
     let user: Option<user::Model> = Query::find_user_by_email(db, group_id)
     .await
@@ -501,7 +501,7 @@ async fn handle_connection(
     // send messages from kafka to rx using tx
     let brokers = "localhost:29092";
     tokio::spawn(async move {
-        consume_and_print(brokers, user.clone().unwrap().email.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, user.clone().unwrap().nickname.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);

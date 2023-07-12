@@ -26,6 +26,10 @@ features = [
     # "sqlx-sqlite",
 ]
 
+[dependencies.rocket_okapi]
+version = "0.8.0-rc.3"
+features = ["swagger", "rapidoc", "rocket_db_pools", "secrets"]
+
 [dev-dependencies]
 tokio = "1.29.1"
 

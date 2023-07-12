@@ -17,8 +17,7 @@ pub struct UserPost {
     pub id: i32,
     pub email: String,
     pub password: String,
-    pub firstname: Option<String>,
-    pub lastname: Option<String>,
+    pub nickname: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
@@ -26,8 +25,7 @@ pub struct UserPost {
 pub struct ReqSignUp {
     pub email: String,
     pub password: String,
-    pub firstname: Option<String>,
-    pub lastname: Option<String>,
+    pub nickname: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]

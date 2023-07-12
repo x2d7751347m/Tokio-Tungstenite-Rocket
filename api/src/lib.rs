@@ -19,7 +19,7 @@ use rocket_cors::{AllowedHeaders, AllowedOrigins, Cors};
 mod pool;
 use pool::Db;
 mod error;
-mod okapi_example;
+mod okapi_pararium;
 
 pub use entity::post;
 pub use entity::post::Entity as Post;
@@ -28,7 +28,7 @@ use rocket::http::Status;
 
 pub mod auth;
 pub mod authors;
-pub mod books;
+pub mod emails;
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &Db::fetch(&rocket).unwrap().conn;
@@ -71,7 +71,7 @@ async fn start() -> Result<(), rocket::Error> {
     mount_endpoints_and_merged_docs! {
         building_rocket, "/v1".to_owned(), openapi_settings,
             "/additional" => custom_route_spec,
-            "/okapi-example" => okapi_example::get_routes_and_docs(&openapi_settings),
+            "/okapi-example" => okapi_pararium::get_routes_and_docs(&openapi_settings),
     };
     building_rocket.launch().await.map(|_| ())
 }

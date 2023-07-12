@@ -1,5 +1,5 @@
 [package]
-name = "rocket-example-api"
+name = "rocket-pararium-api"
 version = "0.1.0"
 authors = ["Sam Samai <sam@studio2pi.com.au>"]
 edition = "2021"
@@ -34,7 +34,7 @@ features = ["rocket_okapi"] # enables rocket_okapi so to have open api features 
 
 [dependencies.rocket_okapi]
 version = "0.8.0-rc.3"
-features = ["swagger", "rapidoc","rocket_db_pools"]
+features = ["swagger", "rapidoc", "rocket_db_pools", "secrets"]
 
 [dependencies.rocket_cors]
 git = "https://github.com/lawliet89/rocket_cors.git"
