@@ -2354,6 +2354,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
+name = "pararium"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "rocket-pararium-api",
+ "websocket",
+]
+
+[[package]]
 name = "parking"
 version = "2.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3421,15 +3430,6 @@ checksum = "0bfd750adb2541f30b855e2d86e90bf7031ac17e048ac5226a8e8c8d8a6022f2"
 dependencies = [
  "devise 0.3.1",
  "quote",
-]
-
-[[package]]
-name = "sea-orm-rocket-okapi-example"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "rocket-pararium-api",
- "websocket",
 ]
 
 [[package]]
