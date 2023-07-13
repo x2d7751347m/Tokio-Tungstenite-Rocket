@@ -32,7 +32,9 @@ impl MigrationTrait for Migration {
                         ForeignKey::create()
                             .name("fk-email-user_id")
                             .from(Email::Table, Email::UserId)
-                            .to(User::Table, User::Id),
+                            .to(User::Table, User::Id)
+                            .on_delete(ForeignKeyAction::Cascade)
+                            .on_update(ForeignKeyAction::Cascade)
                     )
                     .col(ColumnDef::new(Email::Email).string().not_null())
                     .col(
