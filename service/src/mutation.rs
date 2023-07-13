@@ -1,7 +1,7 @@
 use std::time::SystemTime;
 
-use dto::dto::{ReqSignUp, UserPatch};
-use ::entity::{post, post::Entity as Post, user, user::Entity as User};
+use dto::dto::{ReqSignUp, UserPatch, EmailPost};
+use ::entity::{post, post::Entity as Post, user, user::Entity as User, email};
 use bcrypt::{hash, verify, DEFAULT_COST};
 use sea_orm::{*, prelude::DateTimeUtc};
 
@@ -63,6 +63,19 @@ impl Mutation {
         username: Set(form_data.nickname.to_owned()),
         password: Set(hash(&form_data.password, DEFAULT_COST).unwrap()),
         nickname: Set(form_data.nickname.to_owned()),
+            ..Default::default()
+        }
+        .save(db)
+        .await
+    }
+
+    pub async fn create_email(
+        db: &DbConn,
+        form_data: EmailPost,
+    ) -> Result<email::ActiveModel, DbErr> {
+        email::ActiveModel {
+            email: Set(form_data.email.to_owned()),
+            user_id: Set(form_data.user_id.to_owned()),
             ..Default::default()
         }
         .save(db)

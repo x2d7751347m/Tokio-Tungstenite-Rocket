@@ -14,10 +14,16 @@ pub struct PostsDto {
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
 pub struct UserPost {
-    pub id: i32,
     pub email: String,
     pub password: String,
     pub nickname: String,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct EmailPost {
+    pub email: String,
+    pub user_id: i32,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]

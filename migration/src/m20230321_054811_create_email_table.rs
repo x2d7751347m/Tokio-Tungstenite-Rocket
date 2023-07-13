@@ -38,12 +38,14 @@ impl MigrationTrait for Migration {
                     .col(
                         ColumnDef::new(Email::CreatedAt)
                             .timestamp()
-                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned()),
+                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned())
+                            .not_null(),
                     )
                     .col(
                         ColumnDef::new(Email::UpdatedAt)
                             .timestamp()
-                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned()),
+                            .extra("DEFAULT CURRENT_TIMESTAMP".to_owned())
+                            .not_null(),
                     )
                     .to_owned(),
             )

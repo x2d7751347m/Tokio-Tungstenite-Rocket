@@ -52,7 +52,8 @@ pub async fn sign_up(
     // Mail::send().now_or_never();
     let db = conn.into_inner();
     let form = req_sign_up?.into_inner();
-    let cmd = Mutation::create_user(db, form);
+    let user = Mutation::create_user(db, form.clone()).await.unwrap();
+    let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()), user_id: (user.id.unwrap()) });
     match cmd.await {
         Ok(_) => Ok(Json(Some("User successfully added.".to_string()))),
         Err(e) => {
