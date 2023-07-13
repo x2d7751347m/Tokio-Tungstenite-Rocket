@@ -1,11 +1,5 @@
 // use migration::sea_orm;
-// /**
-//  * 📕 EmailStore
-//  *
-//  * @author Afaan Bilal
-//  * @link   https://afaan.dev
-//  * @link   https://github.com/AfaanBilal/emailstore
-//  */
+//
 // use rocket::{
 //     http::Status,
 //     serde::{json::Json, Deserialize, Serialize},
