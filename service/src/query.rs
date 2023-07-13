@@ -16,11 +16,15 @@ impl Query {
     
     pub async fn find_user_by_email(db: &DbConn, email: String) -> Result<Option<user::Model>, DbErr> {
         user::Entity::find()
-        .join_rev(JoinType::InnerJoin, user::Relation::Email.def())
-        .filter(
-            Condition::all()
-                .add(email::Column::Email.eq(email))
+        // construct `RelationDef` on the fly
+        .join_rev(
+            JoinType::InnerJoin,
+            email::Entity::belongs_to(user::Entity)
+                .from(email::Column::UserId)
+                .to(user::Column::Id)
+                .into()
         )
+        .filter(email::Column::Email.eq(&email))
         .one(db)
         .await
     }
