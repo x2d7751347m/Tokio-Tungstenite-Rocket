@@ -1,5 +1,5 @@
 [package]
-name = "pararium"
+name = "example-api"
 version = "0.1.0"
 authors = ["x2d7751347m@gmail.com"]
 edition = "2021"
@@ -10,5 +10,5 @@ members = [".", "api", "service", "entity", "migration", "dto", "socket", "webso
 
 [dependencies]
 dotenv = "0.15.0"
-rocket-pararium-api = { path = "api" }
+rocket-example-api = { path = "api" }
 websocket = { path = "websocket" }

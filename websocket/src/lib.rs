@@ -517,7 +517,7 @@ async fn handle_request(
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
-    let mut opt = ConnectOptions::new("mysql://root:aftertime01@localhost:3306/pararium".to_owned());
+    let mut opt = ConnectOptions::new("mysql://root:aftertime01@localhost:3306/example-api".to_owned());
     opt.max_connections(100)
         .min_connections(5)
         .connect_timeout(Duration::from_secs(8))

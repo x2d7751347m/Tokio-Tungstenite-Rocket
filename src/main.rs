@@ -6,5 +6,5 @@ fn main() {
     thread::spawn(|| {
         let _ = websocket::main();
     });
-    rocket_pararium_api::main();
+    rocket_example_api::main();
 }

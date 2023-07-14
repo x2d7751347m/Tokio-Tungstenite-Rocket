@@ -19,7 +19,6 @@ schemars = { version = "0.8", features = ["chrono"] }
 validator = { version = "0.16.1", features = ["derive"] }
 
 [dependencies.sea-orm]
-# path = "../../../" # remove this line in your own project
 version = "0.12.0-rc.3" # sea-orm version
 
 [dependencies.rocket_okapi]

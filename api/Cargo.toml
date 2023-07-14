@@ -1,7 +1,7 @@
 [package]
-name = "rocket-pararium-api"
+name = "rocket-example-api"
 version = "0.1.0"
-authors = ["Sam Samai <sam@studio2pi.com.au>"]
+authors = ["x2d7751347m <x2d7751347m@studio2pi.com.au>"]
 edition = "2021"
 publish = false
 

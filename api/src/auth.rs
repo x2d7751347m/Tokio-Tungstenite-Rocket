@@ -10,7 +10,7 @@ use sea_orm_rocket::Connection;
 use rocket_okapi::okapi::openapi3::OpenApi;
 
 use crate::error;
-use crate::okapi_pararium::{DataResult, R};
+use crate::okapi_example::{DataResult, R};
 use crate::pool;
 use pool::Db;
 

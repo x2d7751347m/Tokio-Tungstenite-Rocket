@@ -17,6 +17,6 @@
 set db url in rocket.toml
 
 2. [default.databases.sea_orm]
-url = "mysql://root:aftertime01@localhost/pararium"
+url = "mysql://root:aftertime01@localhost/example-api"
 
 from seaorm official docs- let db: DatabaseConnection = Database::connect("protocol://username:password@host/database").await?;
