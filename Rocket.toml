@@ -4,7 +4,8 @@ template_dir = "api/templates/"
 [default.databases.sea_orm]
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
-url = "mysql://root:aftertime01@localhost:3306/example-api"
+# url = "mysql://admin01:aftertime01@localhost:3306/pararium"
+url = "mysql://admin01:aftertime01@121.172.169.200:3306/pararium"
 
 # Postgres
 # make sure to enable "sqlx-postgres" feature in Cargo.toml, i.e default = ["sqlx-postgres"]
