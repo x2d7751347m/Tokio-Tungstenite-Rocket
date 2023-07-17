@@ -6,5 +6,5 @@ fn main() {
     thread::spawn(|| {
         let _ = websocket::main();
     });
-    rocket_tokio_tungstenite_rocket_api::main();
+    rocket_okapi::main();
 }
