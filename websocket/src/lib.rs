@@ -15,7 +15,7 @@
     unused_import_braces)]
 
 use entity::{post::Model, user};
-use migration::sea_orm::{ConnectOptions, Database};
+use migration::sea_orm::{ConnectOptions, Database, prelude::DateTimeUtc};
 use service::{Mutation, Query};
 pub use tungstenite;
 
@@ -28,7 +28,7 @@ mod stream;
 #[cfg(any(feature = "native-tls", feature = "__rustls-tls", feature = "connect"))]
 mod tls;
 
-use std::{io::{Read, Write}, time::Duration};
+use std::{io::{Read, Write}, time::{Duration, SystemTime}};
 
 use compat::{cvt, AllowStd, ContextWaker};
 use futures_util::{
@@ -40,7 +40,7 @@ use std::{
     pin::Pin,
     task::{Context, Poll},
 };
-use tokio::{io::{AsyncRead, AsyncWrite}};
+use tokio::io::{AsyncRead, AsyncWrite};
 
 #[cfg(feature = "handshake")]
 use tungstenite::{
@@ -473,18 +473,20 @@ async fn handle_connection(
     ws_stream: WebSocketStream<Upgraded>,
     addr: SocketAddr,
 ) {
-    let user_id = match user_id { 
+    let user: Option<user::Model>;
+    let _user_id = match user_id { 
         Some(id) => {
-            id as i64
+            id as i64;
+            user = Query::find_user_by_id(db, id)
+    .await
+    .expect("could not find user");
         }
         None => {
             let neg_id = (rand::random::<u32>() as i64).wrapping_neg();
-            Mutation::create_user(db, ReqSignUp { username: neg_id.to_string(), nickname: (neg_id.to_string()), password: (hash("password".to_string(), DEFAULT_COST).unwrap()), email: "email@email.com".to_string() }).await.unwrap().id.unwrap()
+            user = Some(user::Model { id: neg_id, username: neg_id.to_string(), password: neg_id.to_string(), nickname: neg_id.to_string(), created_at: DateTimeUtc::from(SystemTime::now()), updated_at: DateTimeUtc::from(SystemTime::now()) })
         }
     };
-    let user: Option<user::Model> = Query::find_user_by_id(db, user_id)
-    .await
-    .expect("could not find user");
+    
     let topic_name_string = topic_name.to_owned();
     println!("WebSocket connection established: {}", addr);
 

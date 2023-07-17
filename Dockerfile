@@ -41,6 +41,7 @@ WORKDIR /tokio_tungstenite_rocket
 
 COPY --from=build /tokio_tungstenite_rocket/target/release/tokio_tungstenite_rocket ./tokio_tungstenite_rocket
 COPY --from=build /tokio_tungstenite_rocket/Rocket.toml .
+COPY --from=build /tokio_tungstenite_rocket/.env .
 
 EXPOSE 8000
 

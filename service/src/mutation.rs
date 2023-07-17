@@ -93,11 +93,14 @@ impl Mutation {
             .ok_or(DbErr::Custom("Cannot find user.".to_owned()))
             .map(Into::into)?;
 
+        user.username = match form_data.username {
+            Some(b) => Set(b.to_owned()),
+            None => NotSet
+        };
         match form_data.nickname {
             Some(b) => 
             {
-                user.nickname = Set(b.to_owned());
-                user.username = Set(b.to_owned())
+                user.nickname = Set(b.to_owned())
             },
             None => {},
         };
@@ -105,6 +108,7 @@ impl Mutation {
             Some(b) => Set(hash(&b, DEFAULT_COST).unwrap()),
             None => NotSet,
         };
+        user.updated_at = Set(DateTimeUtc::from(SystemTime::now()));
         user.update(db).await
     }
 
