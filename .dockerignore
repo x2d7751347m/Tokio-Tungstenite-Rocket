@@ -1,6 +1,7 @@
 .git
 .gitignore
 .github
+target
 node_modules
 npm-debug.log
 Dockerfile*
