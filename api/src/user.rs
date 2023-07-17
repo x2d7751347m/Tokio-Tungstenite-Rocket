@@ -37,7 +37,7 @@ use rocket::{
     State,
 };
 use sea_orm::*;
-use service::{Claims, AuthenticatedUser, AppConfig};
+use service::{Claims, AuthenticatedUser};
 
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 

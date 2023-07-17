@@ -2,6 +2,7 @@ use sea_orm_migration::prelude::*;
 
 #[async_std::main]
 async fn main() {
+
     //  Setting `DATABASE_URL` environment variable
     let key = "DATABASE_URL";
     if std::env::var(key).is_err() {

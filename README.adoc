@@ -1,0 +1,79 @@
+= Ktor web & websocket sample
+
+== Tutorial movie
+
+https://youtu.be/inZTW69HVk8
+
+video::inZTW69HVk8[youtube]
+
+== Testing video
+
+https://youtu.be/izDngUzWbrI
+
+video::izDngUzWbrI[youtube]
+
+== Swagger ui
+
+http://127.0.0.1:8000
+
+... If running on a local server
+
+http://localhost:8000
+
+== Kafka topic console
+
+http://127.0.0.1:9080
+
+... If running on a local server
+
+http://localhost:9080
+
+== How to tune
+
+. Modify the `url` var in `api/Rocket.toml`(for web server only) to point to your chosen database and modify .env(for websocket ans web server) file too.
+. Turn on the appropriate database feature for your chosen db in `service/Cargo.toml` (the `"sqlx-postgres",` line)
+. Set aws environmental variables and github actions secrets in `.github/workflows/aws.yml`
+. Run kafka server infrastructure using `docker compose up`
+. Execute `cargo run` to start the server
+. You can go to `http://localhost:8000/swagger-ui/index.html` to see the api documentation about this demo project.
+.. Note: WebSocket is binding at port 8080, so you can go to `ws://localhost:8080/socket?{query}` to connect to the WebSocket about this demo project.
+
+[source,bash]
+.docker compose up command
+----
+docker compose up
+----
+
+== Architecture
+
+=== Cloud Architecture of AWS ECS with ALB
+
+image::.adoc/images/Cloud Architecture of AWS ECS with ALB.jpg[]
+
+=== Producers and consumers writing and reading events from Kafka topics ( ws://.../socket?{query} )
+
+image::.adoc/images/kafka-producers-consumers-topics.jpg[]
+
+=== Ci/cd pipeline
+
+image::.adoc/images/aws_architecture.jpg[]
+
+== Database's table columns
+
+image::.adoc/images/Db Table.PNG[]
+
+== How to use
+
+. Post a user
+. Login via /login path to acquire `Authorization` key
+. Set `Authorization` key to `Authorization` header
+... Don't forget the prefix `Bearer `
+... e.g) `Bearer eyJhbGciOiJIU....`
+. Now you can access every apis and websocket!
+.. websocket url e.g) ws://localhost:8080/socket?{group/topic name}
+
+=== Notice
+
+... You don't need to create a user when connecting to `ws://.../socket?{group}`.
+... If you connected with `Authorization` header, the server shows your nickname.
+

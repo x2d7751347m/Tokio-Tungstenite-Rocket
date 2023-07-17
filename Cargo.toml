@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [workspace]
-members = [".", "api", "service", "entity", "migration", "dto", "socket", "websocket"]
+members = [".", "api", "service", "entity", "migration", "dto", "socket", "websocket", "config"]
 
 [dependencies]
 dotenv = "0.15.0"

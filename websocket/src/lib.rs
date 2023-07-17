@@ -522,13 +522,46 @@ async fn handle_connection(
     println!("{} disconnected", &addr);
 }
 
+use sqlx::mysql::MySqlPoolOptions;
+
 async fn handle_request(
     peer_map: PeerMap,
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
-    let mut opt = ConnectOptions::new(env::var("db_url").unwrap().to_owned());
-    opt.max_connections(100)
+    let db_protocol = std::env::var("DB_PROTOCOL").unwrap_or("mysql".to_string());
+    let db_host = std::env::var("DB_HOST").unwrap_or("localhost".to_string());
+    let db_port = std::env::var("DB_PORT").unwrap_or("3306".to_string());
+    let db_username = std::env::var("DB_USERNAME").unwrap_or("root".to_string());
+    let db_password = std::env::var("DB_PASSWORD").unwrap_or("".to_string());
+    let db_database = std::env::var("DB_DATABASE").unwrap_or("".to_string());
+
+    let mut db_url = db_protocol.to_owned();
+    db_url.push_str("://");
+    db_url.push_str(&db_username);
+    db_url.push_str(":");
+    db_url.push_str(&db_password);
+    db_url.push_str("@");
+    db_url.push_str(&db_host);
+    db_url.push_str(":");
+    db_url.push_str(&db_port);
+
+    let mut query_string = "CREATE DATABASE `".to_owned();
+    query_string.push_str(&db_database);
+    query_string.push_str("` /*!40100 COLLATE 'utf8mb4_unicode_ci' */;");
+
+         // Create a connection pool
+    //  for MySQL, use MySqlPoolOptions::new()
+    //  for SQLite, use SqlitePoolOptions::new()
+    //  etc.
+    let pool = MySqlPoolOptions::new().connect(&db_url).await.unwrap();
+    let _ = sqlx::query(&query_string).execute(&pool).await;
+
+    db_url.push_str("/");
+    db_url.push_str(&db_database);
+
+    let mut opt = ConnectOptions::new(db_url);
+    opt.max_connections(2000)
         .min_connections(5)
         .connect_timeout(Duration::from_secs(8))
         .acquire_timeout(Duration::from_secs(8))
@@ -580,12 +613,15 @@ async fn handle_request(
     }
     let ver = req.version();
     let uri = req.uri().clone();
-    let user_id = headers
+    let mut user_id: Option<i64> = Option::None;
+    if!(headers.get("AUTHORIZATION").unwrap().is_empty()){
+        user_id = headers
     .get("AUTHORIZATION")
     .and_then(|h| h.to_str().ok())
     .map(|h| {
         jwt_decode(h.replace("Bearer ", ""))
     });
+    }
     tokio::task::spawn(async move {
         match hyper::upgrade::on(&mut req).await {
             Ok(upgraded) => {
@@ -616,6 +652,7 @@ async fn handle_request(
 use service::Claims;
 use jsonwebtoken::{DecodingKey, Validation};
 use jsonwebtoken::decode;
+use config::app_config::AppConfig;
 
 fn jwt_decode(
         jwt: String,
@@ -624,7 +661,7 @@ fn jwt_decode(
         
             let data = decode::<Claims>(
                 &jwt,
-                &DecodingKey::from_secret(env::var("jwt_secret").unwrap().as_bytes()),
+                &DecodingKey::from_secret(AppConfig::default().jwt_secret.as_bytes()),
                 &Validation::new(jsonwebtoken::Algorithm::HS256),
             );
 

@@ -55,9 +55,11 @@ hdrhistogram = "7.5.2"
 migration = { path = "../migration" }
 entity = { path = "../entity" }
 service = { path = "../service" }
+config = { path = "../config" }
 dto = { path = "../dto" }
 bcrypt = "0.15"
 jsonwebtoken = "8.3.0"
+sqlx = { version = "0.7", features = [ "runtime-async-std", "tls-native-tls" , "mysql"] }
 
 [dependencies.tungstenite]
 git = "https://github.com/snapview/tungstenite-rs"

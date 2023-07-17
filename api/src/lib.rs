@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate rocket;
 
+use sqlx::mysql::MySqlPoolOptions;
+use config::app_config::AppConfig;
 use rocket::fairing::{self, AdHoc};
 use rocket::{Build, Rocket};
 
@@ -38,6 +40,16 @@ async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
 
 #[tokio::main]
 async fn start() -> Result<(), rocket::Error> {
+    let mut query_string = "CREATE DATABASE `".to_owned();
+    query_string.push_str(&AppConfig::default().db_database);
+    query_string.push_str("` /*!40100 COLLATE 'utf8mb4_unicode_ci' */;");
+
+         // Create a connection pool
+    //  for MySQL, use MySqlPoolOptions::new()
+    //  for SQLite, use SqlitePoolOptions::new()
+    //  etc.
+    let pool = MySqlPoolOptions::new().connect(&AppConfig::default().db_url_origin).await.unwrap();
+    let _ = sqlx::query(&query_string).execute(&pool).await;
     let mut building_rocket = rocket::build()
         .attach(Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))

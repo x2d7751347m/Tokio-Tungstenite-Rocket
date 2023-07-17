@@ -1,5 +1,6 @@
 use std::env;
 use std::time::SystemTime;
+use config::app_config::AppConfig;
 
 use ::dto::dto::*;
 use rocket::serde::json::Json;
@@ -38,7 +39,7 @@ use rocket::{
     State,
 };
 use sea_orm::*;
-use service::{Claims, AuthenticatedUser, AppConfig};
+use service::{Claims, AuthenticatedUser};
 
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 
