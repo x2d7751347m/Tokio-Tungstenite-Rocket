@@ -41,7 +41,6 @@ WORKDIR /okapi_example
 
 COPY --from=build /okapi_example/target/release/okapi_example ./okapi_example
 COPY --from=build /okapi_example/Rocket.toml .
-COPY --from=build /okapi_example/.env .
 
 EXPOSE 8000
 

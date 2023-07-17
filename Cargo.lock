@@ -755,6 +755,9 @@ dependencies = [
 [[package]]
 name = "config"
 version = "0.1.0"
+dependencies = [
+ "dotenv",
+]
 
 [[package]]
 name = "const-oid"
