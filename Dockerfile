@@ -9,8 +9,22 @@ WORKDIR /tokio_tungstenite_rocket
 COPY . .
 
 RUN apt-get update 
-RUN apt install -y cmake && apt-get install -y build-essential gdb && apt install -y pkg-config libssl-dev
+RUN apt install -y cmake && apt-get install -y build-essential gdb && apt install -y pkg-config libssl-dev && apt-get install -y wget
 # && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+# Download a supported openssl version. e.g., openssl-1.1.1u.tar.gz
+RUN wget https://www.openssl.org/source/openssl-1.1.1u.tar.gz
+RUN tar -zxvf openssl-1.1.1u.tar.gz
+WORKDIR /opt/openssl-1.1.1u
+RUN ./config && make && make test
+
+RUN mkdir /opt/lib
+RUN mv /opt/openssl-1.1.1u/libcrypto.so.1.1 /opt/lib/
+RUN mv /opt/openssl-1.1.1u/libssl.so.1.1 /opt/lib/
+ENV LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
+
+WORKDIR /tokio_tungstenite_rocket
 
 RUN cargo build --release
 
