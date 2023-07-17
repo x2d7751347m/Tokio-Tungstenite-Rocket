@@ -1121,15 +1121,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
 
 [[package]]
-name = "example-api"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "rocket-example-api",
- "websocket",
-]
-
-[[package]]
 name = "fastrand"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2998,7 +2989,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rocket-pararium-api"
+name = "rocket-okapi_example-api"
 version = "0.1.0"
 dependencies = [
  "async-stream",
