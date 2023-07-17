@@ -3,7 +3,11 @@ name = "websocket"
 description = "Tokio binding for Tungstenite, the Lightweight stream-based WebSocket implementation"
 categories = ["web-programming::websocket", "network-programming", "asynchronous", "concurrency"]
 keywords = ["websocket", "io", "web"]
+authors = ["x2d7751347m <x2d7751347m@gmail.com>", ]
 license = "MIT"
+homepage = "https://github.com/"
+documentation = "https://docs.rs/"
+repository = "https://github.com/"
 version = "0.19.0"
 edition = "2021"
 rust-version = "1.70"
@@ -56,8 +60,6 @@ bcrypt = "0.15"
 jsonwebtoken = "8.3.0"
 
 [dependencies.tungstenite]
-# TODO use 0.20 release
-# version = "0.19.0"
 git = "https://github.com/snapview/tungstenite-rs"
 default-features = false
 

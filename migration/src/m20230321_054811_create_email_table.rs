@@ -1,3 +1,10 @@
+/**
+ * 📕 EmailStore
+ *
+ * @author Afaan Bilal
+ * @link   https://afaan.dev
+ * @link   https://github.com/AfaanBilal/emailstore
+ */
 use sea_orm_migration::prelude::*;
 
 use super::m20220120_000001_create_user_table::User;
