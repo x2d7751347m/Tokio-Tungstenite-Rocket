@@ -2369,15 +2369,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "okapi_example"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "rocket-okapi_example-api",
- "websocket",
-]
-
-[[package]]
 name = "once_cell"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3159,7 +3150,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rocket-okapi_example-api"
+name = "rocket-tokio_tungstenite-api"
 version = "0.1.0"
 dependencies = [
  "async-stream",
@@ -4550,6 +4541,15 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "tokio_tungstenite"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "rocket-tokio_tungstenite-api",
+ "websocket",
 ]
 
 [[package]]

@@ -4,7 +4,7 @@
 
 FROM rust:1.70-slim-buster AS build
 
-WORKDIR /okapi_example
+WORKDIR /tokio_tungstenite
 
 COPY . .
 
@@ -37,12 +37,12 @@ RUN mv /opt/openssl-1.1.1u/libcrypto.so.1.1 /opt/lib/
 RUN mv /opt/openssl-1.1.1u/libssl.so.1.1 /opt/lib/
 ENV LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
 
-WORKDIR /okapi_example
+WORKDIR /tokio_tungstenite
 
-COPY --from=build /okapi_example/target/release/okapi_example ./okapi_example
-COPY --from=build /okapi_example/Rocket.toml .
+COPY --from=build /tokio_tungstenite/target/release/tokio_tungstenite ./tokio_tungstenite
+COPY --from=build /tokio_tungstenite/Rocket.toml .
 
 EXPOSE 8000
 
 # And away we go...
-CMD [ "./okapi_example" ]
+CMD [ "./tokio_tungstenite" ]
