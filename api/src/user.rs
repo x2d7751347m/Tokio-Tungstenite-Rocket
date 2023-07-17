@@ -1,4 +1,3 @@
-use std::time::SystemTime;
 
 use ::dto::dto::*;
 use rocket::serde::json::Json;
@@ -6,9 +5,6 @@ use service::HttpAuth;
 use service::{Mutation, Query};
 
 use sea_orm_rocket::Connection;
-
-use rocket_okapi::okapi::openapi3::OpenApi;
-
 use crate::error;
 use crate::okapi::{DataResult, R};
 use crate::pool;
@@ -23,7 +19,7 @@ use rocket_okapi::{openapi, openapi_get_routes_spec};
 
 const DEFAULT_POSTS_PER_PAGE: u64 = 5;
 
-use crate::{ErrorResponse};
+use crate::ErrorResponse;
 use super::{Response, SuccessResponse};
 use bcrypt::{hash, verify, DEFAULT_COST};
 extern crate entity;

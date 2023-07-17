@@ -1,3 +1,4 @@
+use config::app_config::AppConfig;
 use service::sea_orm;
 
 use async_trait::async_trait;
@@ -23,6 +24,7 @@ impl sea_orm_rocket::Pool for SeaOrmPool {
     async fn init(figment: &Figment) -> Result<Self, Self::Error> {
         let config = figment.extract::<Config>().unwrap();
         let mut options: ConnectOptions = config.url.into();
+        // let options = ConnectOptions::new(AppConfig::default().db_url);
         options
             .max_connections(config.max_connections as u32)
             .min_connections(config.min_connections.unwrap_or_default())

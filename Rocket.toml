@@ -1,6 +1,7 @@
 [default]
 template_dir = "api/templates/" 
 secret_key = "UNr)d[-CS=7HDz/Dpg2pArH6%11t8v"
+address = "localhost" # need check
 
 # [default.databases.sea_orm]
 # # Mysql
