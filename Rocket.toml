@@ -1,6 +1,6 @@
 [default]
 template_dir = "api/templates/" 
-secret_key = "UNr)d[-CS=7HDz/Dpg2pArH6%11t8v"
+# secret_key = "Dpg2pArH611t8v" // Error: failed to extract configuration
 
 [default.databases.sea_orm]
 # Mysql
