@@ -14,6 +14,7 @@ pub struct PostsDto {
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
 pub struct UserPost {
+    pub username: String,
     pub email: String,
     pub password: String,
     pub nickname: String,
@@ -23,7 +24,7 @@ pub struct UserPost {
 #[serde(crate = "rocket::serde")]
 pub struct EmailPost {
     pub email: String,
-    pub user_id: i32,
+    pub user_id: i64,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
@@ -38,15 +39,24 @@ pub struct UsersDto {
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
 pub struct UserPatch {
-    pub id: i32,
-    pub email: Option<String>,
+    pub username: Option<String>,
     pub password: Option<String>,
     pub nickname: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct ResMe {
+    pub id: i64,
+    pub username: String,
+    pub nickname: String,
+    pub password: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
 #[serde(crate = "rocket::serde")]
 pub struct ReqSignUp {
+    pub username: String,
     pub email: String,
     pub password: String,
     pub nickname: String,
@@ -55,7 +65,7 @@ pub struct ReqSignUp {
 #[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
 #[serde(crate = "rocket::serde")]
 pub struct ReqSignIn {
-    pub email: String,
+    pub username_or_email: String,
     pub password: String,
 }
 

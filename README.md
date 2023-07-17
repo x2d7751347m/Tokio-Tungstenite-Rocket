@@ -13,10 +13,6 @@
 
 # how to tune
 
-1. disable # path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line for every toml (api, dto, entity, migration, service...)
-set db url in rocket.toml
 
-2. [default.databases.sea_orm]
-url = "mysql://root:aftertime01@localhost/pararium"
-
-from seaorm official docs- let db: DatabaseConnection = Database::connect("protocol://username:password@host/database").await?;
+1. set [default.databases.sea_orm] in rocket.toml and set environmental parameters in .env
+url form: protocol://username:password@host/database

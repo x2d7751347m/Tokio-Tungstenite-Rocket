@@ -10,7 +10,7 @@
 // use sea_orm_rocket::Connection;
 // use std::time::SystemTime;
 
-// use crate::{okapi_pararium::R, error::Error, pool::Db};
+// use crate::{okapi_example::R, error::Error, pool::Db};
 
 // use super::{ErrorResponse, Response, SuccessResponse};
 // extern crate entity;
@@ -23,7 +23,7 @@
 // #[derive(Serialize)]
 // #[serde(crate = "rocket::serde")]
 // pub struct ResEmail {
-//     pub id: i32,
+//     pub id: i64,
 //     pub email: String,
 // }
 
@@ -112,7 +112,7 @@
 // pub async fn show(
 //     conn: Connection<'_, Db>,
 //     token: HttpAuth,
-//     id: i32,
+//     id: i64,
 // ) -> R<ResEmail> {
 //     let db = conn.into_inner();
 
@@ -139,7 +139,7 @@
 // pub async fn update(
 //     conn: Connection<'_, Db>,
 //     token: HttpAuth,
-//     id: i32,
+//     id: i64,
 //     req_email: Json<ReqEmail>,
 // ) -> R<ResEmail> {
 //     let db = conn.into_inner();
@@ -171,7 +171,7 @@
 // pub async fn delete(
 //     conn: Connection<'_, Db>,
 //     token: HttpAuth,
-//     id: i32,
+//     id: i64,
 // ) -> R<String> {
 //     let db = conn.into_inner();
 

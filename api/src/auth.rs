@@ -1,3 +1,4 @@
+use std::env;
 use std::time::SystemTime;
 
 use ::dto::dto::*;
@@ -10,7 +11,7 @@ use sea_orm_rocket::Connection;
 use rocket_okapi::okapi::openapi3::OpenApi;
 
 use crate::error;
-use crate::okapi_pararium::{DataResult, R};
+use crate::okapi_example::{DataResult, R};
 use crate::pool;
 use pool::Db;
 
@@ -51,9 +52,14 @@ pub async fn sign_in(
 
     let form = req_sign_in?.into_inner();
     
-    let user: Option<user::Model> = Query::find_user_by_email(db, form.email)
+    let user: Option<user::Model> = 
+    if form.username_or_email.contains("@") {
+    Query::find_user_by_email(db, form.username_or_email)
         .await
-        .expect("could not find user");
+        .expect("could not find user")
+    } else {
+        Query::find_user_by_username(db, form.username_or_email).await.expect("could not find user")
+    };
 
     if !verify(&form.password, &user.clone().unwrap().password).unwrap() {
         let m = error::Error {
@@ -77,7 +83,7 @@ pub async fn sign_in(
     let token = encode(
         &Header::default(),
         &claims,
-        &EncodingKey::from_secret("config.jwt_secret.as_bytes()".as_bytes()),
+        &EncodingKey::from_secret(AppConfig::default().jwt_secret.as_bytes()),
     )
     .unwrap();
 

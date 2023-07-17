@@ -17,7 +17,7 @@ use rocket_okapi::{
 use std::env;
 
 pub struct HttpAuth{
-    pub id: i32,
+    pub id: i64,
 }
 
 // Implement the actual checks for the authentication
@@ -30,10 +30,9 @@ impl<'a> FromRequest<'a> for HttpAuth {
         // Get the token from the http header
         match request.headers().get_one("Authorization") {
             Some(token) => {
-            if token == "Bearer mytoken" {
-
+            if token.contains("Bearer ") {
             let data = decode::<Claims>(
-                token,
+                &token.replace("Bearer ", ""),
                 &DecodingKey::from_secret(env::var("jwt_secret").unwrap().as_bytes()),
                 &Validation::new(jsonwebtoken::Algorithm::HS256),
             );
@@ -101,34 +100,34 @@ use rocket::{
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(crate = "rocket::serde")]
 pub struct Claims {
-    pub sub: i32,
+    pub sub: i64,
     pub role: String,
     pub exp: u64,
 }
 
 pub struct AuthenticatedUser {
-    pub id: i32,
+    pub id: i64,
 }
 
 pub struct AppConfig {
-    db_host: String,
-    db_port: String,
-    db_username: String,
-    db_password: String,
-    db_database: String,
+    pub db_host: String,
+    pub db_port: String,
+    pub db_username: String,
+    pub db_password: String,
+    pub db_database: String,
     pub jwt_secret: String,
 }
 
 impl Default for AppConfig {
     fn default() -> Self {
         Self {
-            db_host: std::env::var("BOOKSTORE_DB_HOST").unwrap_or("localhost".to_string()),
-            db_port: std::env::var("BOOKSTORE_DB_PORT").unwrap_or("3306".to_string()),
-            db_username: std::env::var("BOOKSTORE_DB_USERNAME").unwrap_or("root".to_string()),
-            db_password: std::env::var("BOOKSTORE_DB_PASSWORD").unwrap_or("".to_string()),
-            db_database: std::env::var("BOOKSTORE_DB_DATABASE").unwrap_or("pararium".to_string()),
-            jwt_secret: std::env::var("BOOKSTORE_JWT_SECRET")
-                .expect("Please set the BOOKSTORE_JWT_SECRET env variable."),
+            db_host: std::env::var("_DB_HOST").unwrap_or("localhost".to_string()),
+            db_port: std::env::var("_DB_PORT").unwrap_or("3306".to_string()),
+            db_username: std::env::var("_DB_USERNAME").unwrap_or("root".to_string()),
+            db_password: std::env::var("_DB_PASSWORD").unwrap_or("".to_string()),
+            db_database: std::env::var("_DB_DATABASE").unwrap_or("".to_string()),
+            jwt_secret: std::env::var("jwt_secret")
+                .expect("Please set the jwt_secret env variable."),
         }
     }
 }

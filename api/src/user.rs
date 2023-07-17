@@ -10,7 +10,7 @@ use sea_orm_rocket::Connection;
 use rocket_okapi::okapi::openapi3::OpenApi;
 
 use crate::error;
-use crate::okapi_pararium::{DataResult, R};
+use crate::okapi_example::{DataResult, R};
 use crate::pool;
 use pool::Db;
 
@@ -30,7 +30,7 @@ extern crate entity;
 pub use entity::user;
 pub use entity::user::Entity as User;
 use jsonwebtoken::{encode, EncodingKey, Header};
-use migration::sea_orm::{DatabaseConnection, self};
+use migration::sea_orm::{DatabaseConnection, self, Related};
 use rocket::{
     http::Status,
     serde::{Deserialize, Serialize},
@@ -67,42 +67,43 @@ pub async fn sign_up(
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
-#[serde(crate = "rocket::serde")]
-pub struct ResMe {
-    id: i32,
-    nickname: String,
-}
-
 
 #[openapi(tag = "USER")]
 #[get("/me")]
-pub async fn me(conn: Connection<'_, Db>, token: HttpAuth) -> R<ResMe> {
+pub async fn me(conn: Connection<'_, Db>, token: HttpAuth) -> R<user::Model> {
     let db = conn.into_inner();
 
-    let u: user::Model = User::find_by_id(token.id).one(db).await.unwrap().unwrap();
+    let user = Query::find_user_by_id(db, token.id)
+        .await
+        .expect("could not find user");
 
-    Ok(Json(ResMe {
-        id: u.id,
-        nickname: u.nickname,
-    }))
+        
+    match user {
+        Some(user) =>{Ok(Json(user))},
+        None =>{let m = error::Error {
+            err: "Could not find user".to_string(),
+            msg: Some("Could not find user".to_string()),
+            http_status_code: 404,
+        };
+        Err(m)},
+    }
 }
 
 /// # Update a user
 #[openapi(tag = "USER")]
-#[post("/user/<id>", data = "<user_data>")]
+#[patch("/user", data = "<user_data>")]
 pub async fn update(
     conn: Connection<'_, Db>,
-    id: i32,
+    token: HttpAuth,
     user_data: DataResult<'_, UserPatch>,
 ) -> R<Option<String>> {
     let db = conn.into_inner();
 
     let form = user_data?.into_inner();
 
-    let cmd = Mutation::update_user_by_id(db, id, form);
+    let cmd = Mutation::update_user_by_id(db, token.id, form);
     match cmd.await {
-        Ok(_) => Ok(Json(Some("Post successfully updated.".to_string()))),
+        Ok(_) => Ok(Json(Some("User successfully updated.".to_string()))),
         Err(e) => {
             let m = error::Error {
                 err: "Could not update user".to_string(),
@@ -151,7 +152,7 @@ pub async fn list(
 /// # get user by Id
 #[openapi(tag = "USER")]
 #[get("/user/<id>")]
-pub async fn get_by_id(conn: Connection<'_, Db>, id: i32) -> R<Option<user::Model>> {
+pub async fn get_by_id(conn: Connection<'_, Db>, id: i64) -> R<Option<user::Model>> {
     let db = conn.into_inner();
 
     let user: Option<user::Model> = Query::find_user_by_id(db, id)
@@ -162,11 +163,15 @@ pub async fn get_by_id(conn: Connection<'_, Db>, id: i32) -> R<Option<user::Mode
 
 /// # delete user by Id
 #[openapi(tag = "USER")]
-#[delete("/user/<id>")]
-pub async fn delete(conn: Connection<'_, Db>, id: i32) -> R<Option<String>> {
+#[delete("/user")]
+pub async fn delete(conn: Connection<'_, Db>, token: HttpAuth) -> R<Option<String>> {
     let db = conn.into_inner();
+    
+    let user: Option<user::Model> = Query::find_user_by_id(db, token.id)
+        .await
+        .expect("could not find user");
 
-    let cmd = Mutation::delete_user(db, id);
+    let cmd = Mutation::delete_user(db, user.unwrap().id);
     match cmd.await {
         Ok(_) => Ok(Json(Some("User successfully deleted.".to_string()))),
         Err(e) => {
@@ -182,7 +187,7 @@ pub async fn delete(conn: Connection<'_, Db>, id: i32) -> R<Option<String>> {
 
 /// # delete all users
 #[openapi(tag = "USER")]
-#[delete("/user")]
+#[delete("/users")]
 pub async fn destroy(conn: Connection<'_, Db>) -> R<Option<String>> {
     let db = conn.into_inner();
 

@@ -4,7 +4,7 @@
 
 FROM rust:1.70-slim-buster AS build
 
-WORKDIR /pararium
+WORKDIR /okapi_example
 
 COPY . .
 
@@ -18,13 +18,13 @@ RUN cargo build --release
 
 FROM debian:bullseye-slim
 
-WORKDIR /pararium
+WORKDIR /okapi_example
 
 RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
 
-COPY --from=build /pararium/target/release/pararium ./pararium
+COPY --from=build /okapi_example/target/release/okapi_example ./okapi_example
 
 EXPOSE 80
 
 # And away we go...
-CMD [ "./pararium" ]
+CMD [ "./okapi_example" ]

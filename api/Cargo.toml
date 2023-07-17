@@ -1,5 +1,5 @@
 [package]
-name = "rocket-pararium-api"
+name = "rocket-okapi_example-api"
 version = "0.1.0"
 authors = ["Sam Samai <sam@studio2pi.com.au>"]
 edition = "2021"

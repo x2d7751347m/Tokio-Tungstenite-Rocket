@@ -80,7 +80,7 @@ async fn create(
 #[post("/<id>", data = "<post_data>")]
 async fn update(
     conn: Connection<'_, Db>,
-    id: i32,
+    id: i64,
     post_data: DataResult<'_, post::Model>,
 ) -> R<Option<String>> {
     let db = conn.into_inner();
@@ -138,7 +138,7 @@ async fn list(
 /// # get post by Id
 #[openapi(tag = "POST")]
 #[get("/<id>")]
-async fn get_by_id(conn: Connection<'_, Db>, id: i32) -> R<Option<post::Model>> {
+async fn get_by_id(conn: Connection<'_, Db>, id: i64) -> R<Option<post::Model>> {
     let db = conn.into_inner();
 
     let post: Option<post::Model> = Query::find_post_by_id(db, id)
@@ -150,7 +150,7 @@ async fn get_by_id(conn: Connection<'_, Db>, id: i32) -> R<Option<post::Model>> 
 /// # delete post by Id
 #[openapi(tag = "POST")]
 #[delete("/<id>")]
-async fn delete(conn: Connection<'_, Db>, id: i32) -> R<Option<String>> {
+async fn delete(conn: Connection<'_, Db>, id: i64) -> R<Option<String>> {
     let db = conn.into_inner();
 
     let cmd = Mutation::delete_post(db, id);

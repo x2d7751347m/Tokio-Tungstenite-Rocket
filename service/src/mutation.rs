@@ -23,7 +23,7 @@ impl Mutation {
 
     pub async fn update_post_by_id(
         db: &DbConn,
-        id: i32,
+        id: i64,
         form_data: post::Model,
     ) -> Result<post::Model, DbErr> {
         let post: post::ActiveModel = Post::find_by_id(id)
@@ -41,7 +41,7 @@ impl Mutation {
         .await
     }
 
-    pub async fn delete_post(db: &DbConn, id: i32) -> Result<DeleteResult, DbErr> {
+    pub async fn delete_post(db: &DbConn, id: i64) -> Result<DeleteResult, DbErr> {
         let post: post::ActiveModel = Post::find_by_id(id)
             .one(db)
             .await?
@@ -60,7 +60,7 @@ impl Mutation {
         form_data: ReqSignUp,
     ) -> Result<user::ActiveModel, DbErr> {
         user::ActiveModel {
-        username: Set(form_data.nickname.to_owned()),
+        username: Set(form_data.username.to_owned()),
         password: Set(hash(&form_data.password, DEFAULT_COST).unwrap()),
         nickname: Set(form_data.nickname.to_owned()),
             ..Default::default()
@@ -84,7 +84,7 @@ impl Mutation {
     
     pub async fn update_user_by_id(
         db: &DbConn,
-        id: i32,
+        id: i64,
         form_data: UserPatch,
     ) -> Result<user::Model, DbErr> {
         let mut user: user::ActiveModel = User::find_by_id(id)
@@ -108,7 +108,7 @@ impl Mutation {
         user.update(db).await
     }
 
-    pub async fn delete_user(db: &DbConn, id: i32) -> Result<DeleteResult, DbErr> {
+    pub async fn delete_user(db: &DbConn, id: i64) -> Result<DeleteResult, DbErr> {
         let user: user::ActiveModel = User::find_by_id(id)
             .one(db)
             .await?

@@ -466,16 +466,23 @@ use dto::dto::*;
 use bcrypt::{hash, verify, DEFAULT_COST};
 
 async fn handle_connection(
+    user_id: Option<i64>,
     db: &migration::sea_orm::DatabaseConnection,
     topic_name: &str,
     _peer_map: PeerMap,
     ws_stream: WebSocketStream<Upgraded>,
     addr: SocketAddr,
 ) {
-    let group_id = (rand::random::<u64>()).to_string();
-    let cmd = Mutation::create_user(db, ReqSignUp { nickname: (group_id.clone()), password: (hash("password".to_string(), DEFAULT_COST).unwrap()), email: "email".to_string() });
-    let _ = cmd.await;
-    let user: Option<user::Model> = Query::find_user_by_email(db, group_id)
+    let user_id = match user_id { 
+        Some(id) => {
+            id as i64
+        }
+        None => {
+            let neg_id = (rand::random::<u32>() as i64).wrapping_neg();
+            Mutation::create_user(db, ReqSignUp { username: neg_id.to_string(), nickname: (neg_id.to_string()), password: (hash("password".to_string(), DEFAULT_COST).unwrap()), email: "email@email.com".to_string() }).await.unwrap().id.unwrap()
+        }
+    };
+    let user: Option<user::Model> = Query::find_user_by_id(db, user_id)
     .await
     .expect("could not find user");
     let topic_name_string = topic_name.to_owned();
@@ -486,6 +493,9 @@ async fn handle_connection(
 
     let (outgoing, incoming) = ws_stream.split();
     
+
+    let nickname = user.clone().unwrap().nickname;
+    let nickname_clone = user.clone().unwrap().nickname;
     let broadcast_incoming = incoming.try_for_each(|msg| {
         println!("Received a message from {}: {}", addr, msg.to_text().unwrap());
         
@@ -494,14 +504,14 @@ async fn handle_connection(
 
         let brokers = "localhost:29092";
         let message_data = &msg.into_data();
-        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), message_data));
+        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), message_data, nickname.clone().as_str()));
 
         future::ok(())
     });
     // send messages from kafka to rx using tx
     let brokers = "localhost:29092";
     tokio::spawn(async move {
-        consume_and_print(brokers, user.clone().unwrap().nickname.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(brokers, nickname_clone.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
@@ -517,7 +527,7 @@ async fn handle_request(
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
-    let mut opt = ConnectOptions::new("mysql://root:aftertime01@localhost:3306/pararium".to_owned());
+    let mut opt = ConnectOptions::new(env::var("db_url").unwrap().to_owned());
     opt.max_connections(100)
         .min_connections(5)
         .connect_timeout(Duration::from_secs(8))
@@ -544,6 +554,7 @@ async fn handle_request(
     let upgrade = HeaderValue::from_static("Upgrade");
     let websocket = HeaderValue::from_static("websocket");
     let headers = req.headers();
+
     let key = headers.get(SEC_WEBSOCKET_KEY);
     let derived = key.map(|k| derive_accept_key(k.as_bytes()));
     if req.method() != Method::GET
@@ -569,10 +580,17 @@ async fn handle_request(
     }
     let ver = req.version();
     let uri = req.uri().clone();
+    let user_id = headers
+    .get("AUTHORIZATION")
+    .and_then(|h| h.to_str().ok())
+    .map(|h| {
+        jwt_decode(h.replace("Bearer ", ""))
+    });
     tokio::task::spawn(async move {
         match hyper::upgrade::on(&mut req).await {
             Ok(upgraded) => {
                 handle_connection(
+                    user_id,
                     &db,
                     uri.query().unwrap().to_owned().as_str(),
                     peer_map,
@@ -594,6 +612,24 @@ async fn handle_request(
     res.headers_mut().append("X-Engine", "TOKIO_TUNGSTENITE".parse().unwrap());
     Ok(res)
 }
+
+use service::Claims;
+use jsonwebtoken::{DecodingKey, Validation};
+use jsonwebtoken::decode;
+
+fn jwt_decode(
+        jwt: String,
+    ) -> i64 {
+        // Get the jwt token from the http header
+        
+            let data = decode::<Claims>(
+                &jwt,
+                &DecodingKey::from_secret(env::var("jwt_secret").unwrap().as_bytes()),
+                &Validation::new(jsonwebtoken::Algorithm::HS256),
+            );
+
+            data.unwrap().claims.sub
+        }
 
 #[tokio::main]
 pub async fn main() -> Result<(), hyper::Error> {

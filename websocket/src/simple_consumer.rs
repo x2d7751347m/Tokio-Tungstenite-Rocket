@@ -56,6 +56,14 @@ pub async fn consume_and_print(brokers: &str, group_id: &str, topics: &[&str], t
         match consumer.recv().await {
             Err(e) => warn!("Kafka error: {}", e),
             Ok(m) => {
+                let key = match m.key_view::<str>() {
+                    None => "",
+                    Some(Ok(s)) => s,
+                    Some(Err(e)) => {
+                        warn!("Error while deserializing message payload: {:?}", e);
+                        ""
+                    }
+                };
                 let payload = match m.payload_view::<str>() {
                     None => "",
                     Some(Ok(s)) => s,
@@ -64,7 +72,8 @@ pub async fn consume_and_print(brokers: &str, group_id: &str, topics: &[&str], t
                         ""
                     }
                 };
-                tx.unbounded_send(tungstenite::Message::Binary(payload.into())).unwrap();
+                let key_payload = format!("[{}]: {}", key, payload);
+                tx.unbounded_send(tungstenite::Message::Text(key_payload)).unwrap();
                 // consumer.commit_message(&m, CommitMode::Async).unwrap();
             }
         };

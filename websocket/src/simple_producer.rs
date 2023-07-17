@@ -6,14 +6,16 @@ use rdkafka::config::ClientConfig;
 // use rdkafka::message::{Header, OwnedHeaders};
 use rdkafka::producer::{FutureProducer, FutureRecord};
 
-pub async fn produce(brokers: &str, topic_name: &str, msg: &Vec<u8>) {
+pub async fn produce(brokers: &str, topic_name: &str, msg: &Vec<u8>, id: &str) {
     let producer: &FutureProducer = &ClientConfig::new()
         .set("bootstrap.servers", brokers)
         .set("message.timeout.ms", "5000")
         .create()
         .expect("Producer creation error");
-        let id = 4.to_string();
-        let id_string = id.as_str();
+
+        // if id type is i64
+    // let id_string = id.to_string();
+    // let id_str = id_string.as_str();
 
     let futures = (0..1)
         .map(|i|  async move {
@@ -23,7 +25,7 @@ pub async fn produce(brokers: &str, topic_name: &str, msg: &Vec<u8>) {
                 .send(
                     FutureRecord::to(topic_name)
                         .payload(msg)
-                        .key(id_string)
+                        .key(id)
                         // .headers(OwnedHeaders::new().insert(Header {
                         //     key: "header_key",
                         //     value: Some("header_value"),

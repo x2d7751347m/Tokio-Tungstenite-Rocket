@@ -2249,6 +2249,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "okapi_example"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "rocket-okapi_example-api",
+ "websocket",
+]
+
+[[package]]
 name = "once_cell"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2352,15 +2361,6 @@ name = "overload"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
-
-[[package]]
-name = "pararium"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "rocket-pararium-api",
- "websocket",
-]
 
 [[package]]
 name = "parking"
@@ -2989,7 +2989,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rocket-pararium-api"
+name = "rocket-okapi_example-api"
 version = "0.1.0"
 dependencies = [
  "async-stream",
@@ -4670,6 +4670,7 @@ dependencies = [
  "futures-util",
  "hdrhistogram",
  "hyper",
+ "jsonwebtoken",
  "log",
  "migration",
  "native-tls",

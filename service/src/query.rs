@@ -7,10 +7,10 @@ use sea_orm::sea_query::Expr;
 pub struct Query;
 
 impl Query {
-    pub async fn find_post_by_id(db: &DbConn, id: i32) -> Result<Option<post::Model>, DbErr> {
+    pub async fn find_post_by_id(db: &DbConn, id: i64) -> Result<Option<post::Model>, DbErr> {
         Post::find_by_id(id).one(db).await
     }
-    pub async fn find_user_by_id(db: &DbConn, id: i32) -> Result<Option<user::Model>, DbErr> {
+    pub async fn find_user_by_id(db: &DbConn, id: i64) -> Result<Option<user::Model>, DbErr> {
         User::find_by_id(id).one(db).await
     }
     
@@ -25,6 +25,14 @@ impl Query {
                 .into()
         )
         .filter(email::Column::Email.eq(&email))
+        .one(db)
+        .await
+    }
+    
+    pub async fn find_user_by_username(db: &DbConn, username: String) -> Result<Option<user::Model>, DbErr> {
+        user::Entity::find()
+        // construct `RelationDef` on the fly
+        .filter(user::Column::Username.eq(&username))
         .one(db)
         .await
     }
