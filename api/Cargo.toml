@@ -1,5 +1,5 @@
 [package]
-name = "rocket-tokio_tungstenite-api"
+name = "rocket-okapi"
 version = "0.1.0"
 authors = ["x2d7751347m <x2d7751347m@studio2pi.com.au>"]
 edition = "2021"

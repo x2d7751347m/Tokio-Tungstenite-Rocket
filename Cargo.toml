@@ -1,5 +1,5 @@
 [package]
-name = "tokio_tungstenite"
+name = "tokio_tungstenite_rocket"
 version = "0.1.0"
 authors = ["x2d7751347m@gmail.com"]
 edition = "2021"
@@ -10,5 +10,5 @@ members = [".", "api", "service", "entity", "migration", "dto", "socket", "webso
 
 [dependencies]
 dotenv = "0.15.0"
-rocket-tokio_tungstenite-api = { path = "api" }
+rocket-okapi = { path = "api" }
 websocket = { path = "websocket" }

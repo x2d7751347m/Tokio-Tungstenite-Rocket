@@ -645,7 +645,7 @@ async fn handle_request(
     res.headers_mut().append(UPGRADE, websocket);
     res.headers_mut().append(SEC_WEBSOCKET_ACCEPT, derived.unwrap().parse().unwrap());
     // Let's add an additional header to our response to the client.
-    res.headers_mut().append("X-Engine", "TOKIO_TUNGSTENITE".parse().unwrap());
+    res.headers_mut().append("X-Engine", "tokio_tungstenite_rocket".parse().unwrap());
     Ok(res)
 }
 

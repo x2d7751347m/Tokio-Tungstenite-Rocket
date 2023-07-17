@@ -16,7 +16,7 @@
 // use sea_orm_rocket::Connection;
 // use std::time::SystemTime;
 
-// use crate::{tokio_tungstenite::R, error::Error, pool::Db};
+// use crate::{tokio_tungstenite_rocket::R, error::Error, pool::Db};
 
 // use super::{ErrorResponse, Response, SuccessResponse};
 // extern crate entity;

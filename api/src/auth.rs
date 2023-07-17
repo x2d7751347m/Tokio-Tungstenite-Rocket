@@ -12,7 +12,7 @@ use sea_orm_rocket::Connection;
 use rocket_okapi::okapi::openapi3::OpenApi;
 
 use crate::error;
-use crate::tokio_tungstenite::{DataResult, R};
+use crate::okapi::{DataResult, R};
 use crate::pool;
 use pool::Db;
 

@@ -3150,7 +3150,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rocket-tokio_tungstenite-api"
+name = "rocket-okapi"
 version = "0.1.0"
 dependencies = [
  "async-stream",
@@ -4544,11 +4544,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio_tungstenite"
+name = "tokio_tungstenite_rocket"
 version = "0.1.0"
 dependencies = [
  "dotenv",
- "rocket-tokio_tungstenite-api",
+ "rocket-okapi",
  "websocket",
 ]
 
