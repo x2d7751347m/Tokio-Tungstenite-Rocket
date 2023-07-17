@@ -27,7 +27,7 @@ use auth::*;
 use emails::*;
 use user::*;
 pub fn get_routes_and_docs(settings: &OpenApiSettings) -> (Vec<rocket::Route>, OpenApi) {
-    openapi_get_routes_spec![settings: create, update, list, get_by_id, delete, destroy, sign_in, sign_up, me, http_auth, 
+    openapi_get_routes_spec![settings: create, update, list, get_by_id, delete, destroy, auth::sign_in, sign_up, me, http_auth, 
     user::update, user::list, user::get_by_id, user::delete, user::destroy
     ]
 }
