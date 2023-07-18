@@ -80,9 +80,17 @@ image::.adoc/images/kafka-producers-consumers-topics.jpg[]
 
 image::.adoc/images/aws_architecture.jpg[]
 
-== Database's table columns
+== User table columns
 
-image::.adoc/images/Db Table.PNG[]
+image::.adoc/images/user table.PNG[]
+
+== Email table columns
+
+image::.adoc/images/email table.PNG[]
+
+== Post table columns
+
+image::.adoc/images/post table.PNG[]
 
 == How to use
 
