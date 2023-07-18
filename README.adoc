@@ -26,6 +26,16 @@ http://127.0.0.1:8000/swagger-ui
 
 http://localhost:8000/swagger-ui
 
+== Websocket url
+
+ws://127.0.0.1:8080/socket?{topic name}
+
+e.g)
+. ws://127.0.0.1:8080/socket?food_topic
+. ws://127.0.0.1:8080/socket?room1
+
+.. Note) Swagger does not support WebSockets
+
 == Kafka topic console
 
 http://127.0.0.1:9080
