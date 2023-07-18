@@ -6,7 +6,7 @@ template_dir = "api/templates/"
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
 # url = "mysql://admin01:aftertime01@localhost:3306/tokio_tungstenite_rocket"
-url = "mysql://admin01:aftertime01@172.29.96.1:3306/tokio_tungstenite_rocket"
+url = "mysql://admin01:aftertime01@10.46.40.102:3306/tokio_tungstenite_rocket"
 
 # Postgres
 # make sure to enable "sqlx-postgres" feature in Cargo.toml, i.e default = ["sqlx-postgres"]

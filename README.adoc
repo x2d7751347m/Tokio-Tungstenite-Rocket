@@ -2,23 +2,29 @@
 
 == Tutorial movie
 
-https://youtu.be/inZTW69HVk8
+== Tutorial movie
 
-video::inZTW69HVk8[youtube]
+image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
+
+▲ Click!
+
+// video::6pRl7A75_-4[youtube]
 
 == Testing video
 
-https://youtu.be/izDngUzWbrI
+image::.adoc/images/test1.PNG[link="https://youtu.be/izDngUzWbrI"]
 
-video::izDngUzWbrI[youtube]
+▲ Click!
 
-== Swagger ui
+// video::izDngUzWbrI[youtube]
 
-http://127.0.0.1:8000
+== Swagger ui (Check out available API here!)
+
+http://127.0.0.1:8000/swagger-ui/index.html#/
 
 ... If running on a local server
 
-http://localhost:8000
+http://localhost:8000/swagger-ui/index.html#/
 
 == Kafka topic console
 
@@ -30,7 +36,7 @@ http://localhost:9080
 
 == How to tune
 
-. Modify the `url` var in `api/Rocket.toml`(for web server only) to point to your chosen database and modify .env(for websocket ans web server) file too.
+. Modify the `url` var in `api/Rocket.toml` to point to your chosen database and modify .env file too.
 .. You don't have to create a matching Database.
 . Turn on the appropriate database feature for your chosen db in `service/Cargo.toml` (the `"sqlx-postgres",` line)
 . Set aws environmental variables and github actions secrets in `.github/workflows/aws.yml`
