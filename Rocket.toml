@@ -2,6 +2,12 @@
 template_dir = "api/templates/" 
 # secret_key = "Dpg2pArH611t8v" // Error: failed to extract configuration
 
+[global]
+address = "0.0.0.0"
+
+[development]
+address = "0.0.0.0"
+
 [default.databases.sea_orm]
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]

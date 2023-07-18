@@ -93,11 +93,12 @@ async fn start() -> Result<(), rocket::Error> {
 
 fn cors() -> Cors {
     let allowed_origins =
-    AllowedOrigins::all();
-        // AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000"]);
+    AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000", "http://121.172.169.213:8000"]);
+    // AllowedOrigins::all();
+        
 
     rocket_cors::CorsOptions {
-
+        // send_wildcard: true,
         allowed_origins,
         allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Patch, ]
             .into_iter()
@@ -137,6 +138,11 @@ fn custom_openapi_spec() -> OpenApi {
             Server {
                 url: "http://127.0.0.1:8000/v1".to_owned(),
                 description: Some("Localhost".to_owned()),
+                ..Default::default()
+            },
+            Server {
+                url: "http://121.172.169.213:8000/".to_owned(),
+                description: Some("Remote development server1".to_owned()),
                 ..Default::default()
             },
             Server {
