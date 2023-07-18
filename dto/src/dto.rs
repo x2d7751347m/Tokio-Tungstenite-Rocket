@@ -1,6 +1,7 @@
 use entity::*;
 use rocket::{serde::{Deserialize, Serialize}, form::FromForm};
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
+use validator::Validate;
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
 #[serde(crate = "rocket::serde")]
@@ -20,15 +21,17 @@ pub struct UserPost {
     pub nickname: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema, Validate)]
 #[serde(crate = "rocket::serde")]
 pub struct EmailPost {
+    #[validate(email)]
     pub email: String,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema, Validate)]
 #[serde(crate = "rocket::serde")]
 pub struct EmailPatch {
+    #[validate(email)]
     pub email: Option<String>,
     pub user_id: Option<i64>,
 }
@@ -74,10 +77,11 @@ pub struct ResMe {
     pub password: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq)]
+#[derive(Serialize, Deserialize, JsonSchema, FromForm, Clone, Debug, PartialEq, Eq, Validate)]
 #[serde(crate = "rocket::serde")]
 pub struct ReqSignUp {
     pub username: String,
+    #[validate(email)]
     pub email: String,
     pub password: String,
     pub nickname: String,

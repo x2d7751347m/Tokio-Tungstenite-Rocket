@@ -50,6 +50,28 @@ pub async fn sign_up(
     // Mail::send().now_or_never();
     let db = conn.into_inner();
     let form = req_sign_up?.into_inner();
+
+    let find = Query::find_user_by_username(db, form.clone().username);
+    let _ = match find.await {
+        Ok(None) => {
+            Ok(())
+        },
+        Ok(Some(_a)) => {let m = error::Error {
+                err: "This username is already in use.".to_string(),
+                msg: Some("This username is already in use.".to_string()),
+                http_status_code: 409,
+            };
+            return Err(m);
+        }
+        Err(e) => {
+            let m = error::Error {
+                err: "Could not find user".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 500,
+            };
+            Err(m)
+        }
+    };
     let user = Mutation::create_user(db, form.clone()).await.unwrap();
     let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()) }, user.id.unwrap());
     match cmd.await {
@@ -98,6 +120,30 @@ pub async fn update(
     let db = conn.into_inner();
 
     let form = user_data?.into_inner();
+    
+    if form.clone().username.is_some(){
+        let find = Query::find_user_by_username(db, form.clone().username.unwrap());
+    let _ = match find.await {
+        Ok(None) => {
+            Ok(())
+        },
+        Ok(Some(_a)) => {let m = error::Error {
+                err: "This username is already in use.".to_string(),
+                msg: Some("This username is already in use.".to_string()),
+                http_status_code: 409,
+            };
+            return Err(m);
+        }
+        Err(e) =>{
+            let m = error::Error {
+                err: "Could not find user".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 500,
+            };
+            Err(m)
+        }
+    };
+    }
 
     let cmd = Mutation::update_user_by_id(db, token.id, form);
     match cmd.await {

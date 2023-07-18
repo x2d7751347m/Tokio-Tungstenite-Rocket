@@ -25,6 +25,8 @@ pub use entity::email;
 pub use entity::email::Entity as Email;
 use service::{AuthenticatedUser, HttpAuth, Mutation, Query};
 
+// A trait that the Validate derive will impl
+use validator::{Validate, ValidationError};
 const DEFAULT_EMAILS_PER_PAGE: u64 = 5;
 
 use crate::error;
@@ -71,6 +73,41 @@ pub async fn create(
     // Mail::send().now_or_never();
     let db = conn.into_inner();
     let form = req_email?.into_inner();
+
+    match form.validate() {
+        Ok(_) => (),
+        Err(e) => {
+            let m = error::Error {
+                err: "Malformed email".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 400,
+            };
+            return Err(m)
+        }
+      };
+
+    let find = Query::find_email_by_email(db, form.clone().email);
+    let _ = match find.await {
+        Ok(None) => {
+            Ok(())
+        },
+        Ok(Some(_a)) => {let m = error::Error {
+                err: "This email is already in use.".to_string(),
+                msg: Some("This email is already in use.".to_string()),
+                http_status_code: 409,
+            };
+            return Err(m);
+        }
+        Err(e) => {
+            let m = error::Error {
+                err: "Could not find email".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 500,
+            };
+            Err(m)
+        }
+    };
+
     let cmd = Mutation::create_email(db, form, token.id);
     match cmd.await {
         Ok(_) => Ok(Json(Some("Email successfully added.".to_string()))),
@@ -116,6 +153,40 @@ pub async fn update(
     let db = conn.into_inner();
 
     let form = email_data?.into_inner();
+
+    if form.clone().email.is_some(){
+        match form.validate(){
+            Ok(_) => (),
+          Err(e) => {
+            let m = error::Error {
+                err: "Malformed email".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 400,
+            };
+            return Err(m)}
+        }
+    let find = Query::find_email_by_email(db, form.clone().email.unwrap());
+    let _ = match find.await {
+        Ok(None) => {
+            Ok(())
+        },
+        Ok(Some(_a)) => {let m = error::Error {
+                err: "This email is already in use.".to_string(),
+                msg: Some("This email is already in use.".to_string()),
+                http_status_code: 409,
+            };
+            return Err(m);
+        }
+        Err(e) =>{
+            let m = error::Error {
+                err: "Could not find email".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 500,
+            };
+            Err(m)
+        }
+    };
+    }
 
     let _email = if Query::find_email_by_id(db, id).await.unwrap().unwrap().user_id != token.id {
         let m = error::Error {

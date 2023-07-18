@@ -31,20 +31,28 @@ impl Query {
         .one(db)
         .await
     }
-
-    pub async fn find_emails_by_user_id(db: &DbConn, user_id: i64) -> Result<Vec<email::Model>, DbErr> {
-        email::Entity::find()
-        // construct `RelationDef` on the fly
-        .filter(email::Column::UserId.eq(user_id))
-        .all(db)
-        .await
-    }
     
     pub async fn find_user_by_username(db: &DbConn, username: String) -> Result<Option<user::Model>, DbErr> {
         user::Entity::find()
         // construct `RelationDef` on the fly
         .filter(user::Column::Username.eq(&username))
         .one(db)
+        .await
+    }
+    
+    pub async fn find_email_by_email(db: &DbConn, email: String) -> Result<Option<email::Model>, DbErr> {
+        email::Entity::find()
+        // construct `RelationDef` on the fly
+        .filter(email::Column::Email.eq(&email))
+        .one(db)
+        .await
+    }
+
+    pub async fn find_emails_by_user_id(db: &DbConn, user_id: i64) -> Result<Vec<email::Model>, DbErr> {
+        email::Entity::find()
+        // construct `RelationDef` on the fly
+        .filter(email::Column::UserId.eq(user_id))
+        .all(db)
         .await
     }
 

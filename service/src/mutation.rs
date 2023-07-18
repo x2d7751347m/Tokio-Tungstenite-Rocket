@@ -5,6 +5,8 @@ use ::entity::{post, post::Entity as Post, user, user::Entity as User, email, pr
 use bcrypt::{hash, verify, DEFAULT_COST};
 use sea_orm::{*, prelude::DateTimeUtc};
 
+use crate::Query;
+
 pub struct Mutation;
 
 impl Mutation {
@@ -74,6 +76,9 @@ impl Mutation {
         form_data: EmailPost,
         user_id: i64,
     ) -> Result<email::ActiveModel, DbErr> {
+        // if Query::find_email_by_email(db, form_data.email.clone()).await.is_ok(){
+        //     return Err(DbErr::RecordNotInserted);
+        // }
         email::ActiveModel {
             email: Set(form_data.email.to_owned()),
             user_id: Set(user_id),
@@ -88,6 +93,9 @@ impl Mutation {
         id: i64,
         form_data: UserPatch,
     ) -> Result<user::Model, DbErr> {
+        // if Query::find_user_by_username(db, form_data.username.clone().unwrap()).await.is_ok(){
+        //     return Err(DbErr::RecordNotUpdated);
+        // }
         let mut user: user::ActiveModel = User::find_by_id(id)
             .one(db)
             .await?
@@ -118,6 +126,9 @@ impl Mutation {
         id: i64,
         form_data: EmailPatch,
     ) -> Result<email::Model, DbErr> {
+        // if Query::find_email_by_email(db, form_data.email.clone().unwrap()).await.is_ok(){
+        //     return Err(DbErr::RecordNotUpdated);
+        // }
         let mut email: email::ActiveModel = Email::find_by_id(id)
             .one(db)
             .await?
