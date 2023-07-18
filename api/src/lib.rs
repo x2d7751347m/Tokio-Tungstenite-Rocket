@@ -93,9 +93,11 @@ async fn start() -> Result<(), rocket::Error> {
 
 fn cors() -> Cors {
     let allowed_origins =
-        AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000"]);
+    AllowedOrigins::all();
+        // AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000"]);
 
     rocket_cors::CorsOptions {
+
         allowed_origins,
         allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Patch, ]
             .into_iter()
