@@ -97,7 +97,7 @@ fn cors() -> Cors {
 
     rocket_cors::CorsOptions {
         allowed_origins,
-        allowed_methods: vec![Method::Get, Method::Post, Method::Delete]
+        allowed_methods: vec![Method::Get, Method::Post, Method::Delete, Method::Patch, ]
             .into_iter()
             .map(From::from)
             .collect(),
