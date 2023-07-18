@@ -10,14 +10,6 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 
 // video::6pRl7A75_-4[youtube]
 
-== Testing video
-
-image::.adoc/images/test1.PNG[link="https://youtu.be/izDngUzWbrI"]
-
-▲ Click!
-
-// video::izDngUzWbrI[youtube]
-
 == Swagger ui (Check out available API here!)
 
  http://127.0.0.1:8000/swagger-ui
@@ -29,6 +21,8 @@ image::.adoc/images/test1.PNG[link="https://youtu.be/izDngUzWbrI"]
 == Websocket url
 
  ws://127.0.0.1:8080/socket?{topic name}
+
+. IMPORTANT: PORT IS 8080, NOT 8000
 
 ... If running on a local server
 
