@@ -6,7 +6,7 @@
 
 image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 
-▲ Click!
+▲ Click the link!
 
 // video::6pRl7A75_-4[youtube]
 
