@@ -20,29 +20,34 @@ image::.adoc/images/test1.PNG[link="https://youtu.be/izDngUzWbrI"]
 
 == Swagger ui (Check out available API here!)
 
-http://127.0.0.1:8000/swagger-ui
+ http://127.0.0.1:8000/swagger-ui
 
 ... If running on a local server
 
-http://localhost:8000/swagger-ui
+ http://localhost:8000/swagger-ui
 
 == Websocket url
 
-ws://127.0.0.1:8080/socket?{topic name}
-
-e.g)
-. ws://127.0.0.1:8080/socket?food_topic
-. ws://127.0.0.1:8080/socket?room1
-
-.. Note) Swagger does not support WebSockets
-
-== Kafka topic console
-
-http://127.0.0.1:9080
+ ws://127.0.0.1:8080/socket?{topic name}
 
 ... If running on a local server
 
-http://localhost:9080
+ ws://localhost:8080/socket?{topic name}
+
+.. e.g)
+ ws://127.0.0.1:8080/socket?food_topic
+
+ ws://127.0.0.1:8080/socket?room1
+
+. Note) Swagger does not support WebSockets
+
+== Kafka topic console
+
+ http://127.0.0.1:9080
+
+... If running on a local server
+
+ http://localhost:9080
 
 == How to tune
 
