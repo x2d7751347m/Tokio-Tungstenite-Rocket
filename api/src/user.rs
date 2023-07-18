@@ -1,5 +1,6 @@
 
 use ::dto::dto::*;
+use entity::email;
 use rocket::serde::json::Json;
 use service::HttpAuth;
 use service::{Mutation, Query};
@@ -17,7 +18,7 @@ use rocket_okapi::settings::OpenApiSettings;
 
 use rocket_okapi::{openapi, openapi_get_routes_spec};
 
-const DEFAULT_POSTS_PER_PAGE: u64 = 5;
+const DEFAULT_USERS_PER_PAGE: u64 = 5;
 
 use crate::ErrorResponse;
 use super::{Response, SuccessResponse};
@@ -37,6 +38,7 @@ use service::{Claims, AuthenticatedUser};
 
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 
+/// # Create user
 #[openapi(tag = "USER")]
 #[post("/user", data = "<req_sign_up>")]
 pub async fn sign_up(
@@ -49,7 +51,7 @@ pub async fn sign_up(
     let db = conn.into_inner();
     let form = req_sign_up?.into_inner();
     let user = Mutation::create_user(db, form.clone()).await.unwrap();
-    let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()), user_id: (user.id.unwrap()) });
+    let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()) }, user.id.unwrap());
     match cmd.await {
         Ok(_) => Ok(Json(Some("User successfully added.".to_string()))),
         Err(e) => {
@@ -123,7 +125,7 @@ pub async fn list(
 
     // Set page number and items per page
     let page = page.unwrap_or(1);
-    let users_per_page = users_per_page.unwrap_or(DEFAULT_POSTS_PER_PAGE);
+    let users_per_page = users_per_page.unwrap_or(DEFAULT_USERS_PER_PAGE);
     if page == 0 {
         let m = error::Error {
             err: "error getting users".to_string(),

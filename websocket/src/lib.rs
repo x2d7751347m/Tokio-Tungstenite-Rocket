@@ -616,7 +616,7 @@ async fn handle_request(
     let ver = req.version();
     let uri = req.uri().clone();
     let mut user_id: Option<i64> = Option::None;
-    if!(headers.get("AUTHORIZATION").unwrap().is_empty()){
+    if headers.get("AUTHORIZATION").is_some() {
         user_id = headers
     .get("AUTHORIZATION")
     .and_then(|h| h.to_str().ok())

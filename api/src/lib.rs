@@ -30,7 +30,9 @@ use rocket::http::Status;
 
 pub mod auth;
 pub mod user;
-pub mod emails;
+pub mod email;
+
+use rocket::Request;
 
 async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
     let conn = &Db::fetch(&rocket).unwrap().conn;
@@ -85,7 +87,8 @@ async fn start() -> Result<(), rocket::Error> {
             "/additional" => custom_route_spec,
             "/api/v1" => okapi::get_routes_and_docs(&openapi_settings),
     };
-    building_rocket.launch().await.map(|_| ())
+    building_rocket
+    .launch().await.map(|_| ())
 }
 
 fn cors() -> Cors {
@@ -111,7 +114,7 @@ fn custom_openapi_spec() -> OpenApi {
     OpenApi {
         openapi: OpenApi::default_version(),
         info: Info {
-            title: "SeaOrm-Rocket-Okapi Example".to_owned(),
+            title: "Tokio-Tungstenite-Rocket-Okapi".to_owned(),
             description: Some("API Docs for Rocket/SeaOrm example".to_owned()),
             terms_of_service: Some("https://github.com/SeaQL/sea-orm#license".to_owned()),
             contact: Some(Contact {

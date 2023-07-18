@@ -13,6 +13,9 @@ impl Query {
     pub async fn find_user_by_id(db: &DbConn, id: i64) -> Result<Option<user::Model>, DbErr> {
         User::find_by_id(id).one(db).await
     }
+    pub async fn find_email_by_id(db: &DbConn, id: i64) -> Result<Option<email::Model>, DbErr> {
+        Email::find_by_id(id).one(db).await
+    }
     
     pub async fn find_user_by_email(db: &DbConn, email: String) -> Result<Option<user::Model>, DbErr> {
         user::Entity::find()
@@ -26,6 +29,14 @@ impl Query {
         )
         .filter(email::Column::Email.eq(&email))
         .one(db)
+        .await
+    }
+
+    pub async fn find_emails_by_user_id(db: &DbConn, user_id: i64) -> Result<Vec<email::Model>, DbErr> {
+        email::Entity::find()
+        // construct `RelationDef` on the fly
+        .filter(email::Column::UserId.eq(user_id))
+        .all(db)
         .await
     }
     
@@ -50,6 +61,24 @@ impl Query {
         let num_pages = paginator.num_pages().await?;
 
         // Fetch paginated users
+        paginator.fetch_page(page - 1).await.map(|p| (p, num_pages))
+    }
+
+    /// If ok, returns (email models, num pages).
+    pub async fn find_emails_in_page(
+        db: &DbConn,
+        page: u64,
+        emails_per_page: u64,
+        user_id: i64
+    ) -> Result<(Vec<email::Model>, u64), DbErr> {
+        // Setup paginator
+        let paginator = Email::find()
+        .filter(email::Column::UserId.eq(user_id))
+            .order_by_asc(email::Column::Id)
+            .paginate(db, emails_per_page);
+        let num_pages = paginator.num_pages().await?;
+
+        // Fetch paginated emails
         paginator.fetch_page(page - 1).await.map(|p| (p, num_pages))
     }
 

@@ -15,7 +15,6 @@ use rocket_okapi::{
     openapi,
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
-use std::env;
 
 pub struct HttpAuth{
     pub id: i64,

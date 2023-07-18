@@ -28,11 +28,12 @@ websocket = { path = "../websocket" }
 jsonwebtoken = "8.3.0"
 bcrypt = "0.15"
 sqlx = { version = "0.7", features = [ "runtime-async-std", "tls-native-tls" , "mysql"] }
+okapi = { version = "0.7.0-rc.1" }
 
 [dependencies.sea-orm-rocket]
 # path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line
 features = ["rocket_okapi"] # enables rocket_okapi so to have open api features enabled
-# version = "0.5.1"
+# version = "0.8.0-rc.3"
 
 [dependencies.rocket_okapi]
 version = "0.8.0-rc.3"

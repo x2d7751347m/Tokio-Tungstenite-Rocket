@@ -24,7 +24,13 @@ pub struct UserPost {
 #[serde(crate = "rocket::serde")]
 pub struct EmailPost {
     pub email: String,
-    pub user_id: i64,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct EmailPatch {
+    pub email: Option<String>,
+    pub user_id: Option<i64>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
@@ -34,6 +40,21 @@ pub struct UsersDto {
     pub users_per_page: u64,
     pub num_pages: u64,
     pub users: Vec<user::Model>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct EmailsWithPageDto {
+    pub page: u64,
+    pub emails_per_page: u64,
+    pub num_pages: u64,
+    pub emails: Vec<email::Model>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]
+#[serde(crate = "rocket::serde")]
+pub struct EmailsDto {
+    pub emails: Vec<email::Model>,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize, Serialize, JsonSchema)]

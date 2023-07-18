@@ -3163,6 +3163,7 @@ dependencies = [
  "futures-util",
  "jsonwebtoken",
  "migration",
+ "okapi",
  "rocket",
  "rocket_cors",
  "rocket_dyn_templates",

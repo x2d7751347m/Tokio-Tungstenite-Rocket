@@ -1,7 +1,7 @@
 use rocket::{
     http::{ContentType, Status},
     request::Request,
-    response::{self, Responder, Response},
+    response::{self, Responder, Response, status::BadRequest},
 };
 use rocket_okapi::okapi::openapi3::Responses;
 use rocket_okapi::okapi::schemars::{self, Map};

@@ -20,11 +20,11 @@ image::.adoc/images/test1.PNG[link="https://youtu.be/izDngUzWbrI"]
 
 == Swagger ui (Check out available API here!)
 
-http://127.0.0.1:8000/swagger-ui/index.html#/
+http://127.0.0.1:8000/swagger-ui
 
 ... If running on a local server
 
-http://localhost:8000/swagger-ui/index.html#/
+http://localhost:8000/swagger-ui
 
 == Kafka topic console
 

@@ -1,7 +1,7 @@
 use std::time::SystemTime;
 
-use dto::dto::{ReqSignUp, UserPatch, EmailPost};
-use ::entity::{post, post::Entity as Post, user, user::Entity as User, email};
+use dto::dto::{ReqSignUp, UserPatch, EmailPost, EmailPatch};
+use ::entity::{post, post::Entity as Post, user, user::Entity as User, email, prelude::Email};
 use bcrypt::{hash, verify, DEFAULT_COST};
 use sea_orm::{*, prelude::DateTimeUtc};
 
@@ -72,10 +72,11 @@ impl Mutation {
     pub async fn create_email(
         db: &DbConn,
         form_data: EmailPost,
+        user_id: i64,
     ) -> Result<email::ActiveModel, DbErr> {
         email::ActiveModel {
             email: Set(form_data.email.to_owned()),
-            user_id: Set(form_data.user_id.to_owned()),
+            user_id: Set(user_id),
             ..Default::default()
         }
         .save(db)
@@ -111,6 +112,29 @@ impl Mutation {
         user.updated_at = Set(DateTimeUtc::from(SystemTime::now()));
         user.update(db).await
     }
+    
+    pub async fn update_email_by_id(
+        db: &DbConn,
+        id: i64,
+        form_data: EmailPatch,
+    ) -> Result<email::Model, DbErr> {
+        let mut email: email::ActiveModel = Email::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(DbErr::Custom("Cannot find email.".to_owned()))
+            .map(Into::into)?;
+
+        email.email = match form_data.email {
+            Some(b) => Set(b.to_owned()),
+            None => NotSet
+        };
+        email.user_id = match form_data.user_id {
+            Some(b) => Set(b.to_owned()),
+            None => NotSet
+        };
+        email.updated_at = Set(DateTimeUtc::from(SystemTime::now()));
+        email.update(db).await
+    }
 
     pub async fn delete_user(db: &DbConn, id: i64) -> Result<DeleteResult, DbErr> {
         let user: user::ActiveModel = User::find_by_id(id)
@@ -124,5 +148,21 @@ impl Mutation {
 
     pub async fn delete_all_users(db: &DbConn) -> Result<DeleteResult, DbErr> {
         User::delete_many().exec(db).await
+    }
+
+    pub async fn delete_email(db: &DbConn, id: i64) -> Result<DeleteResult, DbErr> {
+        let email: email::ActiveModel = Email::find_by_id(id)
+            .one(db)
+            .await?
+            .ok_or(DbErr::Custom("Cannot find email.".to_owned()))
+            .map(Into::into)?;
+
+        email.delete(db).await
+    }
+
+    pub async fn delete_all_emails(db: &DbConn, user_id: i64) -> Result<DeleteResult, DbErr> {
+        Email::delete_many()
+        .filter(email::Column::UserId.eq(user_id))
+        .exec(db).await
     }
 }
