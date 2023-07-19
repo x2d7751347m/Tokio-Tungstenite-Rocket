@@ -36,7 +36,7 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade)
                     )
-                    .col(ColumnDef::new(Email::Email).string().not_null())
+                    .col(ColumnDef::new(Email::Email).string().not_null().unique_key())
                     .col(
                         ColumnDef::new(Email::CreatedAt)
                             .timestamp()
