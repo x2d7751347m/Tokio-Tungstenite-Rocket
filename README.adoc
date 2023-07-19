@@ -12,15 +12,19 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 
 == Swagger ui (Check out available API here!)
 
- http://127.0.0.1:8000/swagger-ui
+http://121.172.169.213:8000/swagger-ui
+
+ http://121.172.169.213:8000/swagger-ui
 
 ... If running on a local server
+
+http://localhost:8000/swagger-ui
 
  http://localhost:8000/swagger-ui
 
 == Websocket url
 
- ws://127.0.0.1:8080/socket?{topic name}
+ ws://121.172.169.213:8080/socket?{topic name}
 
 . IMPORTANT: PORT IS 8080, NOT 8000
 
@@ -29,17 +33,21 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
  ws://localhost:8080/socket?{topic name}
 
 .. e.g)
- ws://127.0.0.1:8080/socket?food_topic
+ ws://121.172.169.213:8080/socket?food_topic
 
- ws://127.0.0.1:8080/socket?room1
+ ws://121.172.169.213:8080/socket?room1
 
 . Note) Swagger does not support WebSockets
 
 == Kafka topic console
 
- http://127.0.0.1:9080
+http://121.172.169.213:9080
+
+ http://121.172.169.213:9080
 
 ... If running on a local server
+
+http://localhost:9080
 
  http://localhost:9080
 
@@ -57,7 +65,7 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 [source,bash]
 .docker compose up command
 ----
-docker compose up
+docker compose up -d
 ----
 
 == Architecture
