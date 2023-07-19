@@ -11,7 +11,8 @@ pub struct AppConfig {
     pub db_url_origin: String,
     pub db_url: String,
     pub host: String,
-    pub port: String,
+    pub port_websocket: String,
+    pub port_web: String,
     pub broker_url: String,
 }
 
@@ -41,7 +42,8 @@ impl Default for AppConfig {
             db_url_origin: db_url_origin,
             db_url: db_url,
             host: std::env::var("HOST").unwrap_or("localhost".to_string()),
-            port: std::env::var("PORT").unwrap_or("8000".to_string()),
+            port_websocket: std::env::var("PORT_WEBSOCKET").unwrap_or("8080".to_string()),
+            port_web: std::env::var("PORT_WEB").unwrap_or("8000".to_string()),
             broker_url: std::env::var("BROKER_URL").unwrap_or("localhost:29092".to_string()),
         }
     }

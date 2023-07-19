@@ -95,7 +95,7 @@ fn cors() -> Cors {
     let mut url = "http://".to_string();
     url.push_str(&AppConfig::default().host);
     url.push_str(":");
-    url.push_str(&AppConfig::default().port);
+    url.push_str(&AppConfig::default().port_web);
     let allowed_origins =
     AllowedOrigins::some_exact(&["http://localhost:8000", "http://127.0.0.1:8000", &url]);
     // AllowedOrigins::all();
@@ -120,7 +120,7 @@ fn custom_openapi_spec() -> OpenApi {
     let mut url = "http://".to_string();
     url.push_str(&AppConfig::default().host);
     url.push_str(":");
-    url.push_str(&AppConfig::default().port);
+    url.push_str(&AppConfig::default().port_web);
     use rocket_okapi::okapi::openapi3::*;
     OpenApi {
         openapi: OpenApi::default_version(),
