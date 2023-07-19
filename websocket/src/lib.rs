@@ -504,16 +504,16 @@ async fn handle_connection(
             //producer logic
             // send messages from incoming to kafka
 
-        let brokers = "localhost:29092";
+        let brokers = &AppConfig::default().broker_url;
         let message_data = &msg.into_data();
-        futures::executor::block_on(produce(brokers.clone(), topic_name.clone(), message_data, nickname.clone().as_str()));
+        futures::executor::block_on(produce(brokers, topic_name.clone(), message_data, nickname.clone().as_str()));
 
         future::ok(())
     });
     // send messages from kafka to rx using tx
-    let brokers = "localhost:29092";
+    let brokers = AppConfig::default().broker_url;
     tokio::spawn(async move {
-        consume_and_print(brokers, nickname_clone.as_str(), &[topic_name_string.as_str()], tx).await;
+        consume_and_print(&brokers, nickname_clone.as_str(), &[topic_name_string.as_str()], tx).await;
     });
 
     let receive_from_others = rx.map(Ok).forward(outgoing);
@@ -531,25 +531,19 @@ async fn handle_request(
     mut req: Request<Body>,
     addr: SocketAddr,
 ) -> Result<http::response::Response<Body>, Infallible> {
-    let db_protocol = std::env::var("DB_PROTOCOL").unwrap_or("mysql".to_string());
-    let db_host = std::env::var("DB_HOST").unwrap_or("localhost".to_string());
-    let db_port = std::env::var("DB_PORT").unwrap_or("3306".to_string());
-    let db_username = std::env::var("DB_USERNAME").unwrap_or("root".to_string());
-    let db_password = std::env::var("DB_PASSWORD").unwrap_or("".to_string());
-    let db_database = std::env::var("DB_DATABASE").unwrap_or("".to_string());
 
-    let mut db_url = db_protocol.to_owned();
+    let mut db_url = AppConfig::default().db_protocol;
     db_url.push_str("://");
-    db_url.push_str(&db_username);
+    db_url.push_str(&AppConfig::default().db_username);
     db_url.push_str(":");
-    db_url.push_str(&db_password);
+    db_url.push_str(&AppConfig::default().db_password);
     db_url.push_str("@");
-    db_url.push_str(&db_host);
+    db_url.push_str(&AppConfig::default().db_host);
     db_url.push_str(":");
-    db_url.push_str(&db_port);
+    db_url.push_str(&AppConfig::default().db_port);
 
     let mut query_string = "CREATE DATABASE `".to_owned();
-    query_string.push_str(&db_database);
+    query_string.push_str(&AppConfig::default().db_database);
     query_string.push_str("` /*!40100 COLLATE 'utf8mb4_unicode_ci' */;");
 
          // Create a connection pool
@@ -560,7 +554,7 @@ async fn handle_request(
     let _ = sqlx::query(&query_string).execute(&pool).await;
 
     db_url.push_str("/");
-    db_url.push_str(&db_database);
+    db_url.push_str(&AppConfig::default().db_database);
 
     let mut opt = ConnectOptions::new(db_url);
     opt.max_connections(2000)
@@ -573,10 +567,7 @@ async fn handle_request(
         .sqlx_logging_level(log::LevelFilter::Info);
     
     let db: migration::sea_orm::DatabaseConnection = Database::connect(opt).await.unwrap();
-    let dbref = db.clone().to_owned();
-    let form = Model::from(Model { id: (2), title: ("title".parse().unwrap()), text: ("text".parse().unwrap()) } );
-    let cmd = Mutation::create_post(&dbref, form);
-    let _ = cmd.await;
+    // let dbref = db.clone().to_owned();
     // Closing connection here
     // dbref.close().await.unwrap();
 
@@ -674,7 +665,10 @@ fn jwt_decode(
 pub async fn main() -> Result<(), hyper::Error> {
     let state = PeerMap::new(Mutex::new(HashMap::new()));
 
-    let addr = env::args().nth(1).unwrap_or_else(|| "121.172.169.213:8080".to_string()).parse().unwrap();
+    let mut url = AppConfig::default().host;
+    url.push_str(":");
+    url.push_str(&AppConfig::default().port);
+    let addr = url.parse().unwrap();
     // let addr = env::args().nth(1).unwrap_or_else(|| "127.0.0.1:8080".to_string()).parse().unwrap();
 
     let make_svc = make_service_fn(move |conn: &AddrStream| {
