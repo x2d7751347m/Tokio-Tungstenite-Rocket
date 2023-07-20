@@ -1,6 +1,6 @@
-= Ktor web & websocket sample
+= Rust Web & Websocket Server
 
- Coroutine & Non-blocking
+ - Coroutine & Non-blocking
 
 == Tutorial movie
 
