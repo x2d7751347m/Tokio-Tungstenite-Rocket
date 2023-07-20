@@ -99,12 +99,7 @@ pub async fn create(
             return Err(m);
         }
         Err(e) => {
-            let m = error::Error {
-                err: "Could not find email".to_string(),
-                msg: Some(e.to_string()),
-                http_status_code: 500,
-            };
-            Err(m)
+            Ok(())
         }
     };
 

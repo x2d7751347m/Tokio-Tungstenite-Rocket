@@ -64,12 +64,7 @@ pub async fn sign_up(
             return Err(m);
         }
         Err(e) => {
-            let m = error::Error {
-                err: "Could not find user".to_string(),
-                msg: Some(e.to_string()),
-                http_status_code: 500,
-            };
-            Err(m)
+            Ok(())
         }
     };
     let user = Mutation::create_user(db, form.clone()).await.unwrap();
