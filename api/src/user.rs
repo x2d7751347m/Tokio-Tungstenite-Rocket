@@ -41,7 +41,7 @@ use rocket_okapi::okapi::schemars::{self, JsonSchema};
 /// # Create user
 #[openapi(tag = "USER")]
 #[post("/user", data = "<req_sign_up>")]
-pub async fn sign_up(
+pub async fn create(
     conn: Connection<'_, Db>,
     req_sign_up: DataResult<'_, ReqSignUp>,
 ) -> R<Option<String>> {
@@ -62,11 +62,22 @@ pub async fn sign_up(
             };
             return Err(m);
         }
-        Err(e) => {
+        Err(_e) => {
         }
     };
-    let user = Mutation::create_user(db, form.clone()).await.unwrap();
-    let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()) }, user.id.unwrap());
+    let user = Mutation::create_user(db, form.clone());
+    let user_model = match user.await {
+        Ok(u) => {u},
+        Err(e) => {
+            let m = error::Error {
+                err: "Could not insert user".to_string(),
+                msg: Some(e.to_string()),
+                http_status_code: 400,
+            };
+            return Err(m);
+        },
+    };
+    let cmd = Mutation::create_email(db, EmailPost { email: (form.email.to_owned()) }, user_model.id.unwrap());
     match cmd.await {
         Ok(_) => Ok(Json(Some("User successfully added.".to_string()))),
         Err(e) => {

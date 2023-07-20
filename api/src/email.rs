@@ -87,6 +87,7 @@ pub async fn create(
       };
 
     let find = Query::find_email_by_email(db, form.clone().email);
+    
     let _ = match find.await {
         Ok(None) => {
         },

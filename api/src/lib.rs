@@ -85,7 +85,7 @@ async fn start() -> Result<(), rocket::Error> {
     mount_endpoints_and_merged_docs! {
         building_rocket, "/v1".to_owned(), openapi_settings,
             "/additional" => custom_route_spec,
-            "/api/v1" => okapi::get_routes_and_docs(&openapi_settings),
+            "/api" => okapi::get_routes_and_docs(&openapi_settings),
     };
     building_rocket
     .launch().await.map(|_| ())
@@ -116,12 +116,13 @@ fn cors() -> Cors {
     .unwrap()
 }
 
+use rocket_okapi::okapi::openapi3::*;
 fn custom_openapi_spec() -> OpenApi {
     let mut url = "http://".to_string();
     url.push_str(&AppConfig::default().host);
     url.push_str(":");
     url.push_str(&AppConfig::default().port_web);
-    use rocket_okapi::okapi::openapi3::*;
+    url.push_str("/v1");
     OpenApi {
         openapi: OpenApi::default_version(),
         info: Info {
