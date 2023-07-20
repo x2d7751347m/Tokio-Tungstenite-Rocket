@@ -89,7 +89,6 @@ pub async fn create(
     let find = Query::find_email_by_email(db, form.clone().email);
     let _ = match find.await {
         Ok(None) => {
-            Ok(())
         },
         Ok(Some(_a)) => {let m = error::Error {
                 err: "This email is already in use.".to_string(),
@@ -99,7 +98,6 @@ pub async fn create(
             return Err(m);
         }
         Err(e) => {
-            Ok(())
         }
     };
 

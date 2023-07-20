@@ -54,7 +54,6 @@ pub async fn sign_up(
     let find = Query::find_user_by_username(db, form.clone().username);
     let _ = match find.await {
         Ok(None) => {
-            Ok(())
         },
         Ok(Some(_a)) => {let m = error::Error {
                 err: "This username is already in use.".to_string(),
@@ -64,7 +63,6 @@ pub async fn sign_up(
             return Err(m);
         }
         Err(e) => {
-            Ok(())
         }
     };
     let user = Mutation::create_user(db, form.clone()).await.unwrap();
@@ -118,7 +116,7 @@ pub async fn update(
     
     if form.clone().username.is_some(){
         let find = Query::find_user_by_username(db, form.clone().username.unwrap());
-    let _ = match find.await {
+        let _ = match find.await {
         Ok(None) => {
             Ok(())
         },
