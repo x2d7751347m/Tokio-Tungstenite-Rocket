@@ -118,7 +118,6 @@ pub async fn update(
         let find = Query::find_user_by_username(db, form.clone().username.unwrap());
         let _ = match find.await {
         Ok(None) => {
-            Ok(())
         },
         Ok(Some(_a)) => {let m = error::Error {
                 err: "This username is already in use.".to_string(),
@@ -133,7 +132,7 @@ pub async fn update(
                 msg: Some(e.to_string()),
                 http_status_code: 500,
             };
-            Err(m)
+            return Err(m)
         }
     };
     }
