@@ -11,7 +11,7 @@ address = "0.0.0.0"
 [default.databases.sea_orm]
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
-url = "mysql://admin01:aftertime01@localhost:3306/tokio_tungstenite_rocket"
+url = "mysql://admin1:aftertime01@ktor-kafka-database-1.c00hcyln51ck.ap-northeast-2.rds.amazonaws.com:3306/tokio_tungstenite_rocket"
 # url = "mysql://admin01:aftertime01@10.46.40.102:3306/tokio_tungstenite_rocket"
 
 # Postgres
