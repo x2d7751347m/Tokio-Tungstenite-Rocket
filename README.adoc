@@ -68,19 +68,9 @@ http://localhost:9080
 docker compose up -d
 ----
 
-== Architecture
-
-=== Cloud Architecture of AWS ECS with ALB
-
-image::.adoc/images/Cloud Architecture of AWS ECS with ALB.jpg[]
-
 === Producers and consumers writing and reading events from Kafka topics ( ws://.../socket?{query} )
 
 image::.adoc/images/kafka-producers-consumers-topics.jpg[]
-
-=== Ci/cd pipeline
-
-image::.adoc/images/aws_architecture.jpg[]
 
 == User table columns
 
