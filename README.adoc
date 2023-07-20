@@ -1,4 +1,4 @@
-= Ktor Web & Websocket Server
+= Rust Web & Websocket Server
 
  - Coroutine & Non-blocking
 
