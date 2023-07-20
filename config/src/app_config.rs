@@ -16,6 +16,8 @@ pub struct AppConfig {
     pub broker_url: String,
 }
 
+
+// You can specify a value at build time, or you can enter it directly here
 impl Default for AppConfig {
     fn default() -> Self {
         let mut db_url_origin = std::env::var("DB_PROTOCOL").unwrap_or("mysql".to_string());

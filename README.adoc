@@ -53,8 +53,21 @@ http://localhost:9080
 
 == How to tune
 
-. Modify the `url` var in `api/Rocket.toml` to point to your chosen database and modify .env file too.
-.. You don't have to create a matching Database.
+. Modify the file in the path below.
+
+.. In Production
+
+ migration\src\main.rs
+ api/Rocket.toml
+ config\src\app_config.rs
+
+.. In Dev
+
+ .env
+ config\src\app_config.rs
+
+- You don't have to create a matching Database.
+
 . Turn on the appropriate database feature for your chosen db in `service/Cargo.toml` (the `"sqlx-postgres",` line)
 . Set aws environmental variables and github actions secrets in `.github/workflows/aws.yml`
 . Run kafka server infrastructure using `docker compose up`
