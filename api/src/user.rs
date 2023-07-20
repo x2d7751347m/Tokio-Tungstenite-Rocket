@@ -65,6 +65,24 @@ pub async fn create(
         Err(_e) => {
         }
     };
+
+
+    let find = Query::find_email_by_email(db, form.clone().email);
+    
+    let _ = match find.await {
+        Ok(None) => {
+        },
+        Ok(Some(_a)) => {let m = error::Error {
+                err: "This email is already in use.".to_string(),
+                msg: Some("This email is already in use.".to_string()),
+                http_status_code: 409,
+            };
+            return Err(m);
+        }
+        Err(e) => {
+        }
+    };
+
     let user = Mutation::create_user(db, form.clone());
     let user_model = match user.await {
         Ok(u) => {u},

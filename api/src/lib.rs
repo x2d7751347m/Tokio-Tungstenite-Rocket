@@ -145,20 +145,20 @@ fn custom_openapi_spec() -> OpenApi {
         },
         servers: vec![
             Server {
+                url: url.to_owned(),
+                description: Some("Remote development server".to_owned()),
+                ..Default::default()
+            },
+            Server {
                 url: "http://127.0.0.1:8000/v1".to_owned(),
                 description: Some("Localhost".to_owned()),
                 ..Default::default()
             },
-            Server {
-                url: url.to_owned(),
-                description: Some("Remote development server1".to_owned()),
-                ..Default::default()
-            },
-            Server {
-                url: "https://production-server.com/".to_owned(),
-                description: Some("Remote development server".to_owned()),
-                ..Default::default()
-            },
+            // Server {
+            //     url: "https://production-server.com/".to_owned(),
+            //     description: Some("Remote development server".to_owned()),
+            //     ..Default::default()
+            // },
         ],
         ..Default::default()
     }

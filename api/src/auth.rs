@@ -44,7 +44,7 @@ use service::{Claims, AuthenticatedUser};
 use rocket_okapi::okapi::schemars::{self, JsonSchema};
 
 /// # Request access token
-#[openapi(tag = "USER")]
+#[openapi(tag = "AUTH")]
 #[post("/sign-in", data = "<req_sign_in>")]
 pub async fn sign_in(
     conn: Connection<'_, Db>,
