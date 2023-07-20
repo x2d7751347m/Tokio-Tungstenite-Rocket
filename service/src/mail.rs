@@ -15,7 +15,7 @@ impl Mail {
         .body(String::from("Be happy!"))
         .unwrap();
         
-        let creds = Credentials::new("x2d7751347m@gmail.com".to_owned(), "pbnttjcyqepcmrmi".to_owned());
+        let creds = Credentials::new("x2d7751347m@gmail.com".to_owned(), "".to_owned());
         
         // Open a remote connection to gmail
         let mailer = SmtpTransport::relay("smtp.gmail.com")
