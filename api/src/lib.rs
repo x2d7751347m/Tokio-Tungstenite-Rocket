@@ -52,9 +52,9 @@ async fn start() -> Result<(), rocket::Error> {
     //  etc.
     let pool = MySqlPoolOptions::new().connect(&AppConfig::default().db_url_origin).await.unwrap();
     let _ = sqlx::query(&query_string).execute(&pool).await;
-    let figment = rocket::Config::figment();
-        // .merge(("secret_key", "ZmxvYXRpbmd0cnV0aGFncmVldGlnaHRwb29yZm9vdGJhbGxrbm93bGVkZ2U="));
-    let mut building_rocket = rocket::custom(figment)
+    let config = AppConfig::default();
+    let mut building_rocket = rocket::build()
+    .manage(config)
         .attach(Db::init())
         .attach(AdHoc::try_on_ignite("Migrations", run_migrations))
         .mount(
