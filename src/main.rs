@@ -13,6 +13,7 @@ fn main() {
     env::set_var("DB_DATABASE", "tokio_tungstenite_rocket");
     env::set_var("HOST", "10.46.40.102");
     env::set_var("BROKER_URL", "121.172.169.213:29092");
+    // env::set_var("ROCKET_SECRET_KEY", "ZmxvYXRpbmd0cnV0aGFncmVldGlnaHRwb29yZm9vdGJhbGxrbm93bGVkZ2U=");
     thread::spawn(|| {
         let _ = websocket::main();
     });

@@ -14,7 +14,7 @@ RUN apt-get install -y cmake && apt-get install -y build-essential gdb && apt-ge
 
 WORKDIR /tokio_tungstenite_rocket
 
-RUN cargo build --release
+RUN cargo build
 
 #
 # Stage 2 (Run)
@@ -41,7 +41,7 @@ ENV LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
 
 WORKDIR /tokio_tungstenite_rocket
 
-COPY --from=build /tokio_tungstenite_rocket/target/release/tokio_tungstenite_rocket ./tokio_tungstenite_rocket
+COPY --from=build /tokio_tungstenite_rocket/target/debug/tokio_tungstenite_rocket ./tokio_tungstenite_rocket
 COPY --from=build /tokio_tungstenite_rocket/Rocket.toml .
 
 EXPOSE 8080 8000 
