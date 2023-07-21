@@ -57,7 +57,6 @@ http://localhost:9080
 
 .. In Production
 
- migration\src\main.rs
  api/Rocket.toml
  config\src\app_config.rs
 

@@ -1,5 +1,3 @@
-
-
 pub struct AppConfig {
     pub db_protocol: String,
     pub db_host: String,
@@ -26,7 +24,7 @@ impl Default for AppConfig {
         db_url_origin.push_str(":");
         db_url_origin.push_str(&std::env::var("DB_PASSWORD").unwrap_or("password".to_string()));
         db_url_origin.push_str("@");
-        db_url_origin.push_str(&std::env::var("DB_HOST").unwrap_or("localhost".to_string()));
+        db_url_origin.push_str(&std::env::var("DB_HOST").unwrap_or("10.46.40.102".to_string()));
         db_url_origin.push_str(":");
         db_url_origin.push_str(&std::env::var("DB_PORT").unwrap_or("3306".to_string()));
         let mut db_url = db_url_origin.clone();
@@ -34,7 +32,7 @@ impl Default for AppConfig {
         db_url.push_str(&std::env::var("DB_DATABASE").unwrap_or("tokio_tungstenite_rocket".to_string()));
         Self {
             db_protocol: std::env::var("DB_PROTOCOL").unwrap_or("mysql".to_string()),
-            db_host: std::env::var("DB_HOST").unwrap_or("localhost".to_string()),
+            db_host: std::env::var("DB_HOST").unwrap_or("10.46.40.102".to_string()),
             db_port: std::env::var("DB_PORT").unwrap_or("3306".to_string()),
             db_username: std::env::var("DB_USERNAME").unwrap_or("admin_local".to_string()),
             db_password: std::env::var("DB_PASSWORD").unwrap_or("password".to_string()),
