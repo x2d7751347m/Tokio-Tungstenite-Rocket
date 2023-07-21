@@ -1,20 +1,21 @@
 [default]
-template_dir = "api/templates/" 
+template_dir = "api/templates/"
+address = "0.0.0.0" 
 
 [global]
 # address = "0.0.0.0"
 
 [debug]
-address = "10.46.40.102"
+address = "121.172.169.213"
 
 [release]
-address = "10.46.40.102"
+address = "121.172.169.213"
 secret_key = "floatingtruthagreetightpoorfootballknowledge"
 
 [default.databases.sea_orm]
 # Mysql
 # make sure to enable "sqlx-mysql" feature in Cargo.toml, i.e default = ["sqlx-mysql"]
-url = "mysql://remote_admin:password@10.46.40.102:3306/tokio_tungstenite_rocket"
+url = "mysql://local_admin:password@121.172.169.213:3306/tokio_tungstenite_rocket"
 # url = "mysql://admin01:aftertime01@10.46.40.102:3306/tokio_tungstenite_rocket"
 
 # Postgres
