@@ -55,14 +55,7 @@ http://localhost:9080
 
 . Modify the file in the path below.
 
-.. In Production
-
  api/Rocket.toml
- config\src\app_config.rs
-
-.. In Dev
-
- .env
  config\src\app_config.rs
 
 - You don't have to create a matching Database.
