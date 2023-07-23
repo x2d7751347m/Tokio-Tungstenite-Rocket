@@ -32,7 +32,6 @@ okapi = { version = "0.7.0-rc.1" }
 validator = { version = "0.16.1", features = ["derive"] }
 
 [dependencies.sea-orm-rocket]
-# path = "../../../sea-orm-rocket/lib" # remove this line in your own project and use the version line
 features = ["rocket_okapi"] # enables rocket_okapi so to have open api features enabled
 # version = "0.8.0-rc.3"
 
