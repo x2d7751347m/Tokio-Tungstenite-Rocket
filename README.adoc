@@ -12,8 +12,7 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 
 == Swagger ui (Check out available API here!)
 
-// .Hours of Service: (UTC +9) Monday-Friday: 09:00 - 18:00
-Day-off
+.Hours of Service: (UTC +9) Monday-Friday: 09:00 - 18:00
 
 http://121.172.169.213:8000/swagger-ui
 
