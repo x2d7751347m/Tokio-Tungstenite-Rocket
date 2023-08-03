@@ -12,8 +12,6 @@ image::.adoc/images/tutorial1.PNG[link="https://youtu.be/6pRl7A75_-4"]
 
 == Swagger ui (Check out available API here!)
 
-.Hours of Service: (UTC +9) Monday-Friday: 09:00 - 18:00
-
 ... If running on a local server
 
 http://localhost:8000/swagger-ui
